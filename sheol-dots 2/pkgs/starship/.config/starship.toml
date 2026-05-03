@@ -1,0 +1,129 @@
+## =============================================================================
+##  SHEOL // starship.toml — GUI prompt
+##  Censer brackets, spade glyph, gold tones from the wallpaper.
+## =============================================================================
+
+add_newline = true
+command_timeout = 1000
+scan_timeout = 30
+
+format = """
+[╭─](#4a3a1f)[ ♠ ](#a08240)$directory$git_branch$git_status$cmd_duration
+[╰─](#4a3a1f)[ ▸](#e8c870) """
+
+[directory]
+style = "bold #d4c8b0"
+truncation_length = 4
+truncation_symbol = "…/"
+home_symbol = "~"
+read_only = " ⛧"
+read_only_style = "#5a1a1a"
+format = "[$path]($style)[$read_only]($read_only_style) "
+
+[directory.substitutions]
+"Documents" = "doc"
+"Downloads" = "dl"
+"Pictures"  = "img"
+"Music"     = "mus"
+
+[git_branch]
+symbol = " "
+style = "#a08240"
+format = "[on ](#6b6470)[$symbol$branch]($style) "
+truncation_length = 24
+truncation_symbol = "…"
+
+[git_status]
+style = "#5a1a1a"
+format = "[$all_status$ahead_behind]($style) "
+conflicted = "≠"
+ahead = "↑${count}"
+behind = "↓${count}"
+diverged = "⇕${ahead_count}↑${behind_count}↓"
+up_to_date = ""
+untracked = "?"
+stashed = "≡"
+modified = "*"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+
+[cmd_duration]
+min_time = 2_000
+format = "[took $duration](#4a3a1f italic) "
+
+[character]
+disabled = true
+
+[hostname]
+ssh_only = true
+ssh_symbol = " "
+format = "[$ssh_symbol$hostname]($style) "
+style = "#a08240"
+
+[username]
+show_always = false
+style_user = "#b8aea0"
+style_root = "#5a1a1a"
+format = "[$user]($style)@"
+
+[python]
+symbol = " "
+style = "#a08240"
+format = "[$symbol$pyenv_prefix($version )(\\($virtualenv\\) )]($style)"
+
+[rust]
+symbol = " "
+style = "#c9a651"
+format = "[$symbol($version )]($style)"
+
+[nodejs]
+symbol = " "
+style = "#a08240"
+format = "[$symbol($version )]($style)"
+
+[golang]
+symbol = " "
+style = "#a08240"
+format = "[$symbol($version )]($style)"
+
+[lua]
+symbol = " "
+style = "#a08240"
+format = "[$symbol($version )]($style)"
+
+[package]
+symbol = " "
+style = "#6b5530"
+format = "[$symbol$version]($style) "
+
+[docker_context]
+symbol = " "
+style = "#6b5530"
+format = "[$symbol$context]($style) "
+
+[time]
+disabled = true
+
+[battery]
+disabled = true
+
+[memory_usage]
+disabled = true
+
+[line_break]
+disabled = false
+
+[status]
+disabled = false
+symbol = "✘"
+style = "#5a1a1a"
+format = "[$symbol $status]($style) "
+not_executable_symbol = ""
+not_found_symbol = ""
+sigint_symbol = ""
+signal_symbol = ""
+recognize_signal_code = false
+
+[shell]
+disabled = true

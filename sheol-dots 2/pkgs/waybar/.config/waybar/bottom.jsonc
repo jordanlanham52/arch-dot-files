@@ -1,0 +1,76 @@
+// =============================================================================
+//  SHEOL // waybar/bottom.jsonc
+//  Bottom register: status modules (NET CPU MEM BAT) right-aligned.
+// =============================================================================
+{
+    "name": "bottom",
+    "layer": "top",
+    "position": "top",
+    "height": 26,
+    "margin-top": 30,
+    "margin-bottom": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "spacing": 0,
+    "exclusive": true,
+    "passthrough": false,
+    "fixed-center": false,
+
+    "modules-left":   [],
+    "modules-center": [],
+    "modules-right":  [
+        "network",
+        "cpu",
+        "memory",
+        "battery",
+        "tray",
+        "custom/power"
+    ],
+
+    "network": {
+        "format-wifi": "<span foreground='#a08240'>NET</span>  {bandwidthDownBytes}↓  {bandwidthUpBytes}↑",
+        "format-ethernet": "<span foreground='#a08240'>NET</span>  {bandwidthDownBytes}↓  {bandwidthUpBytes}↑",
+        "format-disconnected": "<span foreground='#5a1a1a'>NET</span>  ✗",
+        "format-linked": "<span foreground='#5a1a1a'>NET</span>  link",
+        "interval": 2,
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n{essid} ({signalStrength}%)\n{bandwidthDownBytes}↓ {bandwidthUpBytes}↑",
+        "on-click": "ghostty -e nmtui"
+    },
+
+    "cpu": {
+        "format": "<span foreground='#a08240'>CPU</span>  {usage}%",
+        "interval": 2,
+        "tooltip": true,
+        "on-click": "ghostty -e btop"
+    },
+
+    "memory": {
+        "format": "<span foreground='#a08240'>MEM</span>  {used:0.1f}G",
+        "interval": 5,
+        "tooltip-format": "{used:0.1f}G / {total:0.1f}G ({percentage}%)\nswap: {swapUsed:0.1f}G / {swapTotal:0.1f}G",
+        "on-click": "ghostty -e btop"
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format":          "<span foreground='#a08240'>BAT</span>  {capacity}%",
+        "format-charging": "<span foreground='#c9a651'>BAT</span>  {capacity}%↑",
+        "format-plugged":  "<span foreground='#c9a651'>BAT</span>  {capacity}%",
+        "format-full":     "<span foreground='#c9a651'>BAT</span>  full",
+        "tooltip-format": "{timeTo} · {power}W"
+    },
+
+    "tray": {
+        "icon-size": 14,
+        "spacing": 8
+    },
+
+    "custom/power": {
+        "format": "⏻",
+        "tooltip-format": "exit",
+        "on-click": "wlogout"
+    }
+}

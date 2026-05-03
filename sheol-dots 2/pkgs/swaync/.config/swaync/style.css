@@ -1,0 +1,198 @@
+/* =============================================================================
+   SHEOL // swaync/style.css
+   Notifications as small reliquaries.
+   ============================================================================= */
+
+@define-color abyss      #050507;
+@define-color crypt      #0c0a10;
+@define-color sepulcher  #14111a;
+@define-color ash        #2a2530;
+@define-color linen      #6b6470;
+@define-color bone       #b8aea0;
+@define-color relic      #d4c8b0;
+@define-color tarnish    #4a3a1f;
+@define-color oxide      #6b5530;
+@define-color gilt       #a08240;
+@define-color leaf       #c9a651;
+@define-color halo       #e8c870;
+@define-color sanctus    #5a1a1a;
+
+* {
+    font-family: "Cormorant Garamond", "JetBrainsMono Nerd Font", serif;
+    border-radius: 0;
+}
+
+/* ============================ NOTIFICATION POPUP ========================== */
+.notification-row {
+    outline: none;
+    margin: 8px;
+    padding: 0;
+    background: transparent;
+}
+
+.notification {
+    background: @abyss;
+    border: 1px solid @gilt;
+    box-shadow: 0 0 0 1px @abyss inset, 0 0 0 4px @tarnish inset, 0 0 0 5px @abyss inset;
+    margin: 0;
+    padding: 0;
+}
+
+.notification-content {
+    background: @crypt;
+    padding: 14px 18px;
+    border-radius: 0;
+    margin: 6px;
+}
+
+.summary {
+    color: @relic;
+    font-family: "Cinzel Decorative", serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+}
+
+.body {
+    color: @bone;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 14px;
+    margin-top: 6px;
+}
+
+.time {
+    color: @linen;
+    font-size: 11px;
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+}
+
+.app-name {
+    color: @gilt;
+    font-size: 10px;
+    font-family: "Cinzel Decorative", serif;
+    letter-spacing: 0.1em;
+}
+
+/* Critical notifications: sanctus border, no other change */
+.critical {
+    border: 1px solid @sanctus;
+    box-shadow: 0 0 0 1px @abyss inset, 0 0 0 4px @sanctus inset, 0 0 0 5px @abyss inset;
+}
+
+.critical .summary {
+    color: @sanctus;
+}
+
+/* ============================ CONTROL CENTER PANEL ======================== */
+.control-center {
+    background: @abyss;
+    border: 1px solid @gilt;
+    box-shadow: 0 0 0 1px @abyss inset, 0 0 0 4px @tarnish inset, 0 0 0 5px @abyss inset;
+    margin: 8px;
+    padding: 0;
+}
+
+.widget-title {
+    color: @halo;
+    font-family: "Cinzel Decorative", serif;
+    font-size: 18px;
+    letter-spacing: 0.15em;
+    padding: 18px 20px 10px 20px;
+    margin: 0;
+}
+
+.widget-title button {
+    background: transparent;
+    border: 1px solid @tarnish;
+    color: @bone;
+    padding: 4px 12px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 12px;
+}
+
+.widget-title button:hover {
+    background: @crypt;
+    border-color: @gilt;
+    color: @halo;
+}
+
+.widget-dnd {
+    color: @bone;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 13px;
+    padding: 6px 20px 14px 20px;
+    margin: 0;
+    border-bottom: 1px solid @tarnish;
+}
+
+.widget-dnd > switch {
+    background: @crypt;
+    border: 1px solid @tarnish;
+    border-radius: 0;
+    min-width: 40px;
+    min-height: 18px;
+}
+
+.widget-dnd > switch:checked {
+    background: @gilt;
+    border-color: @halo;
+}
+
+.widget-dnd > switch slider {
+    background: @bone;
+    border-radius: 0;
+    border: 0;
+    min-width: 16px;
+    min-height: 16px;
+}
+
+.notification-group {
+    background: transparent;
+    color: @bone;
+    padding: 4px;
+}
+
+/* Empty state */
+.notification-list {
+    background: transparent;
+}
+
+.empty-list {
+    color: @linen;
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: 14px;
+    padding: 32px 20px;
+}
+
+/* Close button on notifications */
+.close-button {
+    background: transparent;
+    color: @linen;
+    border: 0;
+    font-size: 14px;
+    padding: 2px 6px;
+}
+
+.close-button:hover {
+    color: @sanctus;
+}
+
+/* Action buttons in notifications */
+.notification-default-action,
+.notification-action {
+    background: @crypt;
+    color: @bone;
+    border: 1px solid @tarnish;
+    border-radius: 0;
+    padding: 6px 12px;
+    font-family: "Cormorant Garamond", serif;
+}
+
+.notification-default-action:hover,
+.notification-action:hover {
+    background: @sepulcher;
+    border-color: @gilt;
+    color: @halo;
+}

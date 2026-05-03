@@ -1,0 +1,20 @@
+# OS noise
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+*~
+
+# User data that shouldn't be committed
+**/cache/
+**/Cache/
+.zsh_history
+.bash_history
+
+# Generated content
+*.lock
+
+# Don't commit assets — those are generated/personal
+# Comment these out if you want to ship the wallpaper with the repo
+assets/wallpaper.png
+assets/spade.png

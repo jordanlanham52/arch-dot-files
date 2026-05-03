@@ -1,0 +1,47 @@
+## =============================================================================
+##  SHEOL // starship-tty.toml — TTY fallback
+##  Strict ASCII. No Unicode box-drawing. No Nerd Font glyphs.
+##  Used when $TERM == "linux" (raw framebuffer console).
+## =============================================================================
+
+add_newline = true
+command_timeout = 500
+
+format = """
+[*](bold red) $directory$git_branch$git_status
+> """
+
+[directory]
+style = "bold white"
+truncation_length = 3
+truncation_symbol = ".../"
+read_only = " [ro]"
+
+[git_branch]
+symbol = ""
+format = "on [$branch](yellow) "
+
+[git_status]
+style = "red"
+format = "[$all_status$ahead_behind]($style) "
+
+[character]
+disabled = true
+
+[time]
+disabled = true
+
+[python]
+symbol = "py "
+[rust]
+symbol = "rs "
+[nodejs]
+symbol = "node "
+[golang]
+symbol = "go "
+[lua]
+symbol = "lua "
+[docker_context]
+symbol = "docker "
+[package]
+symbol = "pkg "

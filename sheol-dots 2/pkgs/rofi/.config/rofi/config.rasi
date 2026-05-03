@@ -1,0 +1,12 @@
+configuration {
+    modi: "drun,run,window";
+    show-icons: false;
+    terminal: "ghostty";
+    drun-display-format: "{name}";
+    location: 0;
+    disable-history: false;
+    hide-scrollbar: true;
+    sidebar-mode: false;
+}
+
+@theme "missal"

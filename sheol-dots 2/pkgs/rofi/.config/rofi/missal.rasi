@@ -1,0 +1,153 @@
+/* =============================================================================
+   SHEOL // rofi/missal.rasi
+   The launcher as opened missal. Double-frame, gilt prompt.
+   ============================================================================= */
+
+* {
+    /* Color tokens */
+    abyss:      #050507;
+    crypt:      #0c0a10;
+    sepulcher:  #14111a;
+    ash:        #2a2530;
+    linen:      #6b6470;
+    bone:       #b8aea0;
+    relic:      #d4c8b0;
+    pallor:     #e8dfd0;
+    tarnish:    #4a3a1f;
+    oxide:      #6b5530;
+    gilt:       #a08240;
+    leaf:       #c9a651;
+    halo:       #e8c870;
+    sanctus:    #5a1a1a;
+    transparent: rgba(0, 0, 0, 0);
+
+    background-color: transparent;
+    text-color: @bone;
+    font: "Cormorant Garamond 14";
+}
+
+configuration {
+    show-icons: false;
+    display-drun: "";
+    display-run: "";
+    display-window: "";
+    drun-display-format: "{name}";
+    sidebar-mode: false;
+}
+
+window {
+    background-color: @abyss;
+    border: 1px solid;
+    border-color: @gilt;
+    border-radius: 0;
+    width: 620px;
+    padding: 0;
+    location: center;
+    anchor: center;
+    transparency: "real";
+}
+
+mainbox {
+    border: 6px solid;
+    border-color: @tarnish;
+    border-radius: 0;
+    padding: 24px;
+    spacing: 16px;
+    background-color: @abyss;
+    children: [ "inputbar", "divider", "listview" ];
+}
+
+inputbar {
+    background-color: transparent;
+    text-color: @relic;
+    padding: 0;
+    spacing: 12px;
+    children: [ "prompt", "entry" ];
+}
+
+prompt {
+    background-color: transparent;
+    text-color: @halo;
+    font: "Cinzel Decorative 16";
+    padding: 4px 0;
+}
+
+entry {
+    background-color: transparent;
+    text-color: @relic;
+    placeholder: "···";
+    placeholder-color: @tarnish;
+    padding: 4px 0;
+    cursor: text;
+    font: "Cormorant Garamond 16";
+}
+
+divider {
+    expand: false;
+    padding: 0;
+    border: 0 0 1px 0 solid;
+    border-color: @gilt;
+    background-color: transparent;
+}
+
+listview {
+    background-color: transparent;
+    columns: 1;
+    lines: 8;
+    fixed-height: false;
+    scrollbar: false;
+    spacing: 2px;
+    padding: 4px 0;
+}
+
+element {
+    padding: 8px 14px;
+    background-color: transparent;
+    text-color: @bone;
+    border: 0 0 0 0 solid;
+    border-color: transparent;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+element selected {
+    background-color: @crypt;
+    text-color: @halo;
+    border: 0 0 0 3px solid;
+    border-color: @gilt;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    vertical-align: 0.5;
+    horizontal-align: 0;
+    font: "Cormorant Garamond 14";
+}
+
+element normal.normal,
+element alternate.normal {
+    text-color: @bone;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    text-color: @sanctus;
+}
+
+element normal.active,
+element alternate.active {
+    text-color: @leaf;
+}
+
+message {
+    background-color: transparent;
+    border: 0;
+    padding: 4px 0;
+}
+
+textbox {
+    text-color: @linen;
+    background-color: transparent;
+    font: "Cormorant Garamond 12";
+}

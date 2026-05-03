@@ -1,0 +1,184 @@
+/* =============================================================================
+   SHEOL // waybar/style.css
+   Two-register iconostasis styling, calibrated to the mockup.
+   ============================================================================= */
+
+/* Color tokens */
+@define-color abyss      #050507;
+@define-color crypt      #0c0a10;
+@define-color sepulcher  #14111a;
+@define-color shroud     #1f1a26;
+@define-color ash        #2a2530;
+@define-color linen      #6b6470;
+@define-color bone       #b8aea0;
+@define-color relic      #d4c8b0;
+@define-color pallor     #e8dfd0;
+@define-color tarnish    #4a3a1f;
+@define-color oxide      #6b5530;
+@define-color gilt       #a08240;
+@define-color leaf       #c9a651;
+@define-color halo       #e8c870;
+@define-color sanctus    #5a1a1a;
+
+* {
+    font-family: "Cinzel Decorative", "Cormorant Garamond", "JetBrainsMono Nerd Font", serif;
+    font-size: 13px;
+    border-radius: 0;
+    border: none;
+    margin: 0;
+    padding: 0;
+    min-height: 0;
+}
+
+/* ============================ TOP REGISTER ================================ */
+window#waybar.top {
+    background: linear-gradient(180deg, #0c0a10 0%, #050507 100%);
+    border-top: 1px solid @gilt;
+    border-bottom: 1px solid @tarnish;
+    color: @bone;
+}
+
+/* ========================== BOTTOM REGISTER =============================== */
+window#waybar.bottom {
+    background: linear-gradient(180deg, #050507 0%, #0c0a10 100%);
+    border-top: 0;
+    border-bottom: 1px solid @gilt;
+    color: @linen;
+    font-size: 12px;
+}
+
+/* ----- Spade launcher ----------------------------------------------------- */
+#custom-spade {
+    color: @gilt;
+    font-size: 18px;
+    padding: 0 16px;
+    border-right: 1px solid @ash;
+    transition: color 200ms ease;
+}
+
+#custom-spade:hover {
+    color: @halo;
+}
+
+/* ----- Workspaces (Roman numerals) ---------------------------------------- */
+#workspaces {
+    padding: 0 4px;
+}
+
+#workspaces button {
+    color: @linen;
+    font-family: "Cinzel Decorative", serif;
+    font-size: 14px;
+    padding: 0 14px;
+    border: none;
+    background: transparent;
+    transition: all 250ms ease;
+}
+
+#workspaces button:hover {
+    color: @bone;
+    background: rgba(160, 130, 64, 0.08);
+    box-shadow: none;
+    text-shadow: none;
+}
+
+#workspaces button.active {
+    color: @halo;
+    background: radial-gradient(ellipse at center bottom,
+                rgba(160, 130, 64, 0.25) 0%,
+                rgba(160, 130, 64, 0.05) 50%,
+                transparent 80%);
+    text-shadow: 0 0 8px rgba(232, 200, 112, 0.4);
+}
+
+#workspaces button.urgent {
+    color: @sanctus;
+    background: rgba(90, 26, 26, 0.15);
+}
+
+/* ----- Window title ------------------------------------------------------- */
+#window {
+    color: @bone;
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: 14px;
+    padding: 0 24px;
+}
+
+/* ----- Clock (Roman, ◆-flanked) ------------------------------------------- */
+#custom-clock {
+    color: @relic;
+    font-family: "Cinzel Decorative", serif;
+    font-size: 14px;
+    padding: 0 20px;
+    border-left: 1px solid @ash;
+    letter-spacing: 0.05em;
+}
+
+/* ============================ STATUS MODULES ============================== */
+/* Used in the bottom register. Vertical hairlines between them. */
+#network,
+#cpu,
+#memory,
+#battery,
+#tray,
+#custom-power {
+    color: @bone;
+    padding: 0 14px;
+    border-right: 1px solid @ash;
+    border-left: 1px solid @ash;
+    margin: 0 -1px;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+}
+
+#network:hover,
+#cpu:hover,
+#memory:hover,
+#battery:hover {
+    background: rgba(160, 130, 64, 0.06);
+}
+
+/* Critical states — sanctus, no animation, just stillness */
+#battery.warning {
+    color: @leaf;
+}
+#battery.critical {
+    color: @sanctus;
+}
+#network.disconnected {
+    color: @sanctus;
+}
+
+/* ----- Tray --------------------------------------------------------------- */
+#tray {
+    padding: 0 8px;
+}
+
+/* ----- Power button ------------------------------------------------------- */
+#custom-power {
+    color: @gilt;
+    font-size: 13px;
+    padding: 0 16px;
+    transition: color 200ms ease;
+}
+
+#custom-power:hover {
+    color: @sanctus;
+    background: rgba(90, 26, 26, 0.10);
+}
+
+/* ----- Tooltips ----------------------------------------------------------- */
+tooltip {
+    background: @abyss;
+    border: 1px solid @gilt;
+    border-radius: 0;
+    color: @bone;
+    font-family: "Cormorant Garamond", serif;
+}
+
+tooltip label {
+    color: @bone;
+    padding: 6px 10px;
+}
