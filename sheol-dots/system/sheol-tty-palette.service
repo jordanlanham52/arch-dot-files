@@ -1,0 +1,23 @@
+# =============================================================================
+#  SHEOL // sheol-tty-palette.service
+#  Apply Tarnished Reliquary palette to the Linux console at boot.
+#  Linked to /etc/systemd/system/sheol-tty-palette.service
+#  Enable with: sudo systemctl enable --now sheol-tty-palette.service
+#
+#  setvtrgb writes the palette via ioctl on STDOUT, so each TTY needs its
+#  own invocation with stdout redirected to that /dev/ttyN.
+# =============================================================================
+
+[Unit]
+Description=Apply SHEOL palette to the Linux framebuffer console
+DefaultDependencies=no
+After=systemd-vconsole-setup.service
+Before=getty.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'for tty in /dev/tty1 /dev/tty2 /dev/tty3 /dev/tty4 /dev/tty5 /dev/tty6; do setvtrgb /etc/sheol/setvtrgb-palette.txt > "$tty" 2>/dev/null || true; done'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

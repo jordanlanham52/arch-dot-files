@@ -1,0 +1,12 @@
+# =============================================================================
+#  SHEOL // greetd config (/etc/greetd/config.toml)
+#  TUI greeter themed in Tarnished Reliquary palette.
+#  Install greetd + tuigreet, then link this to /etc/greetd/config.toml
+# =============================================================================
+
+[terminal]
+vt = 1
+
+[default_session]
+command = "tuigreet --time --remember --remember-session --asterisks --window-padding 4 --greeting 'sheol awaits' --theme 'border=yellow;text=white;prompt=yellow;time=white;container=black;input=yellow;action=yellow;button=yellow'"
+user = "greeter"
