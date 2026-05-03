@@ -83,8 +83,6 @@ PACMAN_PKGS=(
     terminus-font
     # Theming dependencies
     qt5ct qt6ct kvantum nwg-look
-    # Power menu
-    wlogout
     # Python (for the roman_clock script)
     python
     # Optional but nice
@@ -102,6 +100,7 @@ AUR_PKGS=(
     ttf-cormorant
     bibata-cursor-theme
     catppuccin-gtk-theme-mocha     # base; we override with our CSS
+    wlogout
 )
 
 $AUR -S --needed --noconfirm "${AUR_PKGS[@]}" || warn "some AUR packages failed — continuing"
