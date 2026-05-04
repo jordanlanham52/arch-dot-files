@@ -82,7 +82,7 @@ PACMAN_PKGS=(
     # Wallpaper (renamed from swww in Oct 2025)
     awww
     # Terminal + shell
-    kitty zsh starship fastfetch
+    kitty foot zsh starship fastfetch
     # Tools
     yazi neovim git stow
     eza bat ripgrep fd duf dust
@@ -249,7 +249,7 @@ else
         fi
     done
 
-    for pkg in hypr waybar rofi swaync starship kitty ghostty fastfetch zsh nvim; do
+    for pkg in hypr waybar rofi swaync starship kitty foot ghostty fastfetch zsh nvim; do
         if [ ! -d "$pkg" ]; then
             info "$pkg (no source dir, skipping)"
             continue
@@ -417,6 +417,7 @@ verify "wallpaper.png"    "$HOME/.config/hypr/wallpaper.png"
 verify "waybar/top.jsonc" "$HOME/.config/waybar/top.jsonc"
 verify "waybar/style.css" "$HOME/.config/waybar/style.css"
 verify "kitty.conf"       "$HOME/.config/kitty/kitty.conf"
+verify "foot.ini"         "$HOME/.config/foot/foot.ini"
 verify "fastfetch config" "$HOME/.config/fastfetch/config.jsonc"
 
 # Verify .zshrc has the fastfetch greeting
