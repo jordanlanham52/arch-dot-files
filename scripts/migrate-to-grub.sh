@@ -92,6 +92,40 @@ ENTRY_FILE="/boot/loader/entries/${DEFAULT_ENTRY}.conf"
 CMDLINE=$(grep "^options" "$ENTRY_FILE" | sed 's/^options //')
 ok "extracted cmdline: $CMDLINE"
 
+# ---- Detect root filesystem so we can include the right GRUB modules ------
+step "detecting root filesystem and modules needed"
+
+ROOT_DEV=$(findmnt -no SOURCE /)
+ROOT_FSTYPE=$(findmnt -no FSTYPE /)
+info "  root device: $ROOT_DEV ($ROOT_FSTYPE)"
+
+# Build module list based on filesystem
+GRUB_MODULES="part_gpt part_msdos fat"
+case "$ROOT_FSTYPE" in
+    ext2|ext3|ext4) GRUB_MODULES="$GRUB_MODULES ext2" ;;
+    btrfs)          GRUB_MODULES="$GRUB_MODULES btrfs" ;;
+    xfs)            GRUB_MODULES="$GRUB_MODULES xfs" ;;
+    f2fs)           GRUB_MODULES="$GRUB_MODULES f2fs" ;;
+    *)              warn "  unknown root fs '$ROOT_FSTYPE' — include modules manually" ;;
+esac
+
+# Detect LUKS
+if [[ "$ROOT_DEV" == /dev/mapper/* ]] || cryptsetup status "$ROOT_DEV" &>/dev/null; then
+    GRUB_MODULES="$GRUB_MODULES cryptodisk luks luks2 gcry_rijndael gcry_sha256 gcry_sha512"
+    info "  LUKS detected — adding crypto modules"
+    USING_LUKS=true
+else
+    USING_LUKS=false
+fi
+
+# LVM detection
+if [[ "$ROOT_DEV" == /dev/mapper/* ]] && lvs &>/dev/null; then
+    GRUB_MODULES="$GRUB_MODULES lvm"
+    info "  LVM detected — adding lvm module"
+fi
+
+ok "modules: $GRUB_MODULES"
+
 # ---- Install GRUB to ESP ---------------------------------------------------
 step "installing GRUB to ESP"
 
@@ -99,9 +133,10 @@ sudo grub-install \
     --target=x86_64-efi \
     --efi-directory="$ESP_MOUNT" \
     --bootloader-id=GRUB \
+    --modules="$GRUB_MODULES" \
     --recheck
 
-ok "GRUB installed to ESP"
+ok "GRUB installed to ESP with $ROOT_FSTYPE support"
 
 # ---- Configure /etc/default/grub -------------------------------------------
 step "writing /etc/default/grub"
