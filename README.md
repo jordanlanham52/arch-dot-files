@@ -50,7 +50,7 @@ The installer will:
 2. **Disk** — let you pick a target, prompt for explicit `WIPE` confirmation, partition + format, optional LUKS encryption (recommended on real hardware)
 3. **Base** — pacstrap the Arch base system
 4. **Configure** — locale, timezone, hostname, user account, sudo
-5. **Bootloader** — systemd-boot
+5. **Bootloader** — GRUB with sheol theme + Plymouth splash (LUKS-aware)
 6. **Network** — NetworkManager + dual-mode boot (multi-user.target by default; Hyprland on demand from TTY1)
 7. **Hand-off** — at the reboot prompt, optionally enter your fork URL of this repo to auto-clone and run `install.sh` on first login
 
@@ -204,14 +204,18 @@ The boot sequence is themed too. From power-on to Hyprland, it's all sheol — n
 
 ### Layers
 
-1. **Bootloader** — sheol-themed GRUB menu with engraved spade watermark, Cinzel Decorative entries, "select rite to enter" header. Optional — fresh installs default to systemd-boot for speed.
+1. **Bootloader** — sheol-themed GRUB menu with engraved spade watermark, Cinzel Decorative entries, "select rite to enter" header. Installed by default on fresh installs from `arch-installer.sh`.
 2. **Plymouth splash** — black screen with engraved spade fading in over a halo, "MEMENTO LUDERE" subtitle, themed LUKS unlock prompt
 3. **Silent kernel** — no `[OK]` text spam during boot via `quiet splash loglevel=3` and friends
 4. **Hyprland handoff** — directly into the rice (or hyprlock if scheduled to lock)
 
-### Apply on existing system
+### Fresh installs
 
-If you already have systemd-boot (default for installs from this repo):
+`arch-installer.sh` sets up the entire boot rice automatically, including LUKS-aware GRUB modules and the sheol Plymouth theme. **No manual steps needed if you provide a sheol-dots repo URL during install** (so the installer can pre-clone it and copy theme assets into place during the chroot phase).
+
+### Apply on existing systems
+
+If you have an older install on systemd-boot (older versions of this repo's installer) and want to switch:
 
 ```bash
 bash scripts/boot-rice.sh

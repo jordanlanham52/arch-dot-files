@@ -56,6 +56,14 @@ grub-install \
     --modules="$GRUB_MODULES" \
     --recheck
 
+# Enable cryptodisk in /etc/default/grub if LUKS detected
+if [[ "$GRUB_MODULES" == *cryptodisk* ]]; then
+    if ! grep -q "^GRUB_ENABLE_CRYPTODISK=" /etc/default/grub 2>/dev/null; then
+        echo 'GRUB_ENABLE_CRYPTODISK=y' >> /etc/default/grub
+        echo "   added GRUB_ENABLE_CRYPTODISK=y to /etc/default/grub"
+    fi
+fi
+
 echo ":: regenerating grub.cfg"
 grub-mkconfig -o /boot/grub/grub.cfg
 

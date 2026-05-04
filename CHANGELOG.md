@@ -1,5 +1,25 @@
 # SHEOL // Changelog
 
+## v6 — 2026-05-04
+
+### Default bootloader switched to GRUB
+
+`arch-installer.sh` now installs **GRUB with the sheol theme + Plymouth splash by default** instead of systemd-boot. The bootloader phase is fully LUKS-aware:
+
+- **GRUB binary** built with `cryptodisk luks luks2 gcry_rijndael gcry_sha256 gcry_sha512` modules when LUKS is detected — fixes the "no cryptodisk module can handle this device" failure mode that bricked the previous migrate-to-grub workflow.
+- **`GRUB_ENABLE_CRYPTODISK=y`** added to `/etc/default/grub` for LUKS systems so `grub-mkconfig` emits the right `cryptomount` calls.
+- **`grub` and `efibootmgr`** added to the pacstrap package list.
+- **Pre-clone of dotfiles repo into `/mnt/root/sheol-dots-temp`** so chroot has access to GRUB and Plymouth theme assets during install. Cleaned up after install.
+- **Sheol GRUB theme deployed** to `/usr/share/grub/themes/sheol/` during chroot.
+- **Sheol Plymouth theme deployed** to `/usr/share/plymouth/themes/sheol/` and set as default via `plymouth-set-default-theme`. Initramfs rebuilt to include theme.
+
+Result: fresh installs now boot directly into the full sheol experience — themed GRUB menu, sheol Plymouth splash with LUKS unlock prompt, silent kernel boot — from the very first reboot. No `boot-rice.sh` or `migrate-to-grub.sh` needed for new installs.
+
+### Fixed bugs in migration scripts
+
+- **`scripts/migrate-to-grub.sh`** now passes `--modules="cryptodisk luks luks2 gcry_*"` to `grub-install` when LUKS is detected, and writes `GRUB_ENABLE_CRYPTODISK=y` to `/etc/default/grub`. Previous version produced a non-bootable system on LUKS hosts.
+- **`scripts/repair-grub.sh`** added — auto-detects root filesystem and LUKS, runs corrected `grub-install` to recover from broken GRUB installs.
+
 ## v5 — 2026-05-04
 
 ### Boot sequence themed end-to-end
