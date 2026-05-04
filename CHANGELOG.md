@@ -1,5 +1,19 @@
 # SHEOL // Changelog
 
+## v5 — 2026-05-04
+
+### Boot sequence themed end-to-end
+
+The rice now extends through the entire boot, not just the desktop session.
+
+- **Plymouth splash** (`pkgs/plymouth/`) — script-mode theme with engraved spade fade-in, "MEMENTO LUDERE" subtitle, animated halo progress bar, themed LUKS password prompt with diamond bullets and "✦ enter the rite ✦" label.
+- **GRUB theme** (`pkgs/grub/`) — engraved menu with dim spade watermark background (1920x1080), Cinzel Decorative menu entries, "select rite to enter" header, hairline-bordered menu items, gold progress bar for boot countdown.
+- **`scripts/boot-rice.sh`** — idempotent installer that detects bootloader (systemd-boot or GRUB), copies Plymouth theme to `/usr/share/plymouth/themes/sheol/`, adds plymouth hook to mkinitcpio, sets silent kernel cmdline, rebuilds initramfs. If GRUB is detected, also installs the GRUB theme. Backups every file modified to `~/.cache/sheol-boot-backups/<timestamp>/`.
+- **`scripts/migrate-to-grub.sh`** — for users who want the GRUB theme but currently have systemd-boot. Extracts existing kernel cmdline, installs GRUB to ESP, generates `/etc/default/grub`, regenerates `grub.cfg`. Leaves systemd-boot files in place for fallback.
+- **`arch-installer.sh` updates** — fresh installs now include `plymouth` in pacstrap, add the plymouth hook to mkinitcpio HOOKS automatically (both LUKS and non-LUKS paths), and use the full silent-boot kernel cmdline (`quiet splash loglevel=3 rd.systemd.show_status=false rd.udev.log_level=3 vt.global_cursor_default=0`).
+
+The result: power-on → firmware logo → bootloader → black-with-spade → Hyprland. No green-on-black kernel spam, no flash of plain text between phases.
+
 ## v4 — 2026-05-03
 
 ### App-wide themes added

@@ -198,7 +198,72 @@ Reboot. You'll land on TTY1 with the Hyprland launch prompt.
 
 ---
 
-## App themes
+## Boot rice (Plymouth + GRUB)
+
+The boot sequence is themed too. From power-on to Hyprland, it's all sheol — no flash of green-on-black kernel messages, no plain bootloader, no jarring transitions.
+
+### Layers
+
+1. **Bootloader** — sheol-themed GRUB menu with engraved spade watermark, Cinzel Decorative entries, "select rite to enter" header. Optional — fresh installs default to systemd-boot for speed.
+2. **Plymouth splash** — black screen with engraved spade fading in over a halo, "MEMENTO LUDERE" subtitle, themed LUKS unlock prompt
+3. **Silent kernel** — no `[OK]` text spam during boot via `quiet splash loglevel=3` and friends
+4. **Hyprland handoff** — directly into the rice (or hyprlock if scheduled to lock)
+
+### Apply on existing system
+
+If you already have systemd-boot (default for installs from this repo):
+
+```bash
+bash scripts/boot-rice.sh
+```
+
+This installs the Plymouth theme, adds it to mkinitcpio, sets silent-boot kernel cmdline, and rebuilds initramfs. **Reversible** — every modified file is backed up to `~/.cache/sheol-boot-backups/<timestamp>/`.
+
+If you want the GRUB menu theme too, you'll need to migrate from systemd-boot first:
+
+```bash
+bash scripts/migrate-to-grub.sh    # converts bootloader (read script first!)
+bash scripts/boot-rice.sh           # then installs Plymouth + GRUB theme
+```
+
+### Files
+
+```
+pkgs/plymouth/usr/share/plymouth/themes/sheol/
+├── sheol.plymouth      manifest
+├── sheol.script        animation logic
+├── spade.png           360px engraved spade
+├── halo.png            progress bar gradient
+└── bullet.png          password mask diamond
+
+pkgs/grub/usr/share/grub/themes/sheol/
+├── theme.txt           GRUB theme manifest
+├── background.png      1920x1080 with dim spade watermark
+└── menu_*.png          menu item 9-slice pixmaps
+```
+
+### Testing Plymouth without rebooting
+
+```bash
+sudo plymouthd
+sudo plymouth show-splash
+# look at it for a few seconds, then:
+sudo plymouth quit
+```
+
+### What you see on a real boot
+
+1. Power on → ~1s firmware logo
+2. GRUB menu (~3s, or instant if you set `GRUB_TIMEOUT=0`) — "select rite to enter"
+3. Black screen with spade fading in (~2s)
+4. If LUKS: themed password prompt ("✦ enter the rite ✦" with diamond bullets)
+5. Hyprland starts, rice loads
+
+No text flicker between any of these phases.
+
+---
+
+
 
 The rice extends beyond Hyprland into all your daily-driver apps. Every one is themed in the same gold-on-abyss palette.
 

@@ -363,18 +363,51 @@ step "installing app-specific themes"
 echo
 
 # --- VS Code: install the Sheol Dark theme extension ---
-if command -v code >/dev/null 2>&1; then
-    VSC_EXT_DIR="$HOME/.vscode/extensions/sheol.sheol-dark-1.0.0"
-    SHEOL_VSC_SRC="$DOTS_DIR/pkgs/vscode/.local/share/sheol-vscode-theme"
-    if [ -d "$SHEOL_VSC_SRC" ]; then
-        rm -rf "$VSC_EXT_DIR"
-        mkdir -p "$VSC_EXT_DIR"
-        cp -r "$SHEOL_VSC_SRC"/* "$VSC_EXT_DIR/"
-        ok "VS Code: Sheol Dark theme installed (~/.vscode/extensions/)"
-        info "  to activate: open VS Code → Cmd+K Cmd+T → Sheol Dark"
+# VS Code variants use different extension dirs:
+#   code (Microsoft binary)       → ~/.vscode/extensions/
+#   code-oss (Arch repo)          → ~/.vscode-oss/extensions/
+#   visual-studio-code-bin (AUR)  → ~/.vscode/extensions/
+#   vscodium                      → ~/.vscode-oss/extensions/
+#   vscode flatpak                → ~/.var/app/com.visualstudio.code/data/vscode/extensions/
+SHEOL_VSC_SRC="$DOTS_DIR/pkgs/vscode/.local/share/sheol-vscode-theme"
+VSC_INSTALLED_TO=()
+
+install_vsc_theme() {
+    local target="$1"
+    if [ -d "$(dirname "$target")" ] || mkdir -p "$(dirname "$target")" 2>/dev/null; then
+        rm -rf "$target"
+        mkdir -p "$target"
+        cp -r "$SHEOL_VSC_SRC"/* "$target/"
+        VSC_INSTALLED_TO+=("$target")
     fi
-else
-    info "  code not installed — VS Code theme skipped"
+}
+
+if [ -d "$SHEOL_VSC_SRC" ]; then
+    # Check every variant and install to whichever exists
+    for cmd in code code-oss codium vscodium; do
+        if command -v "$cmd" >/dev/null 2>&1; then
+            case "$cmd" in
+                code)              install_vsc_theme "$HOME/.vscode/extensions/sheol.sheol-dark-1.0.0" ;;
+                code-oss|codium)   install_vsc_theme "$HOME/.vscode-oss/extensions/sheol.sheol-dark-1.0.0" ;;
+                vscodium)          install_vsc_theme "$HOME/.vscode-oss/extensions/sheol.sheol-dark-1.0.0" ;;
+            esac
+        fi
+    done
+
+    # Also drop into ~/.vscode/extensions/ unconditionally as a catch-all
+    # since most variants will look there anyway
+    if [ ${#VSC_INSTALLED_TO[@]} -eq 0 ]; then
+        install_vsc_theme "$HOME/.vscode/extensions/sheol.sheol-dark-1.0.0"
+        info "  no VS Code binary detected — theme placed in ~/.vscode/extensions/ as fallback"
+    fi
+
+    if [ ${#VSC_INSTALLED_TO[@]} -gt 0 ]; then
+        ok "VS Code: Sheol Dark theme installed to:"
+        for path in "${VSC_INSTALLED_TO[@]}"; do
+            info "    $path"
+        done
+        info "  to activate: open VS Code → Ctrl+K Ctrl+T → Sheol Dark"
+    fi
 fi
 
 # --- bat: build cache so it sees the Sheol theme ---

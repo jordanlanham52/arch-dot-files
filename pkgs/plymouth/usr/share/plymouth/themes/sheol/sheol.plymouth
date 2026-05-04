@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Sheol
+Description=The Tarnished Reliquary — engraved spade boot splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/sheol
+ScriptFile=/usr/share/plymouth/themes/sheol/sheol.script

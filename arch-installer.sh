@@ -283,6 +283,7 @@ phase_pacstrap() {
         cryptsetup \
         sudo zsh git vim nano \
         terminus-font \
+        plymouth \
         man-db man-pages texinfo \
         || die "pacstrap failed"
     ok "base system installed"
@@ -339,8 +340,11 @@ FONT=ter-v22b
 EOF
 
 if [ "$USE_LUKS" = "true" ]; then
-    echo "  ▸ configuring mkinitcpio for LUKS"
-    sed -i 's|^HOOKS=.*|HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)|' /etc/mkinitcpio.conf
+    echo "  ▸ configuring mkinitcpio for LUKS + Plymouth"
+    sed -i 's|^HOOKS=.*|HOOKS=(base systemd plymouth autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)|' /etc/mkinitcpio.conf
+else
+    echo "  ▸ adding Plymouth hook to mkinitcpio"
+    sed -i -E 's/(^HOOKS=\([^)]*\bsystemd\b)/\1 plymouth/' /etc/mkinitcpio.conf
 fi
 
 echo "  ▸ regenerating initramfs"
@@ -379,10 +383,10 @@ fi
 echo "initrd  /initramfs-linux.img"  >> $ENTRY
 
 if [ "$USE_LUKS" = "true" ]; then
-    echo "options rd.luks.name=${LUKS_UUID}=cryptroot root=/dev/mapper/cryptroot rw quiet loglevel=3" >> $ENTRY
+    echo "options rd.luks.name=${LUKS_UUID}=cryptroot root=/dev/mapper/cryptroot rw quiet splash loglevel=3 rd.systemd.show_status=false rd.udev.log_level=3 vt.global_cursor_default=0" >> $ENTRY
 else
     ROOT_UUID=$(blkid -s UUID -o value "$ROOT_PART")
-    echo "options root=UUID=${ROOT_UUID} rw quiet loglevel=3" >> $ENTRY
+    echo "options root=UUID=${ROOT_UUID} rw quiet splash loglevel=3 rd.systemd.show_status=false rd.udev.log_level=3 vt.global_cursor_default=0" >> $ENTRY
 fi
 
 echo "  ▸ pacman hook for systemd-boot updates"
