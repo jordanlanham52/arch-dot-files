@@ -1,0 +1,108 @@
+# =============================================================================
+#  SHEOL DELUXE // GRUB theme
+#  Reference-image-matching layout. Background → frame → header → menu → footer.
+# =============================================================================
+
+# Background image — abyss with dim spade watermark, 1920x1080
+desktop-image: "grub-background.png"
+desktop-color: "#050507"
+
+# Default colors used when a widget doesn't override
+title-text: ""
+title-color: "#c9a651"
+message-color: "#a08240"
+message-bg-color: "#050507"
+terminal-font: "Unifont Regular 16"
+
+# ---- Outer engraved frame (full-screen overlay) ---------------------------
+
++ image {
+    file = "grub-frame.png"
+    left = 0
+    top = 0
+    width = 100%
+    height = 100%
+}
+
+# ---- SHEOL header at the top center ---------------------------------------
+
++ image {
+    file = "grub-sheol-header.png"
+    left = 50%-450
+    top = 8%
+    width = 900
+    height = 140
+}
+
+# ---- Top divider (just below the header) ----------------------------------
+
++ image {
+    file = "grub-divider.png"
+    left = 50%-400
+    top = 21%
+    width = 800
+    height = 40
+}
+
+# ---- The actual boot menu container ---------------------------------------
+
++ boot_menu {
+    left   = 50%-400
+    top    = 30%
+    width  = 800
+    height = 50%
+
+    item_font            = "Unifont Regular 16"
+    item_color           = "#b8aea0"
+    selected_item_font   = "Unifont Regular 16"
+    selected_item_color  = "#e8c870"
+
+    icon_width  = 28
+    icon_height = 28
+    item_height = 48
+    item_padding = 14
+    item_spacing = 6
+    item_icon_space = 18
+
+    item_pixmap_style          = "menu_*.png"
+    selected_item_pixmap_style = "menu_selected_*.png"
+
+    scrollbar = false
+}
+
+# ---- Bottom divider (just above the countdown) ----------------------------
+
++ image {
+    file = "grub-divider.png"
+    left = 50%-400
+    top = 84%
+    width = 800
+    height = 40
+}
+
+# ---- Countdown label using Roman numerals ---------------------------------
+
++ label {
+    id   = "__timeout__"
+    text = "AUTO-BOOT  IN  %d"
+    font = "Unifont Regular 16"
+    color = "#a08240"
+    align = "center"
+    left  = 0
+    top   = 90%
+    width = 100%
+    height = 30
+}
+
+# ---- Footer hints ---------------------------------------------------------
+
++ label {
+    text  = "ENTER:  SELECT     E:  EDIT     C:  COMMAND  LINE"
+    font  = "Unifont Regular 16"
+    color = "#6b6470"
+    align = "center"
+    left   = 0
+    top    = 95%
+    width  = 100%
+    height = 24
+}
