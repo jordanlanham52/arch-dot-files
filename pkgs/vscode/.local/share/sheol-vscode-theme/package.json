@@ -1,0 +1,20 @@
+{
+    "name": "sheol-dark",
+    "displayName": "Sheol Dark",
+    "description": "The Tarnished Reliquary — gold-on-abyss editor theme. Part of the SHEOL rice.",
+    "version": "1.0.0",
+    "publisher": "sheol",
+    "engines": {
+        "vscode": "^1.70.0"
+    },
+    "categories": ["Themes"],
+    "contributes": {
+        "themes": [
+            {
+                "label": "Sheol Dark",
+                "uiTheme": "vs-dark",
+                "path": "./themes/sheol-dark-color-theme.json"
+            }
+        ]
+    }
+}

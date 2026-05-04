@@ -1,0 +1,169 @@
+{
+    // ===== Editor =====
+    "editor.fontFamily": "JetBrainsMono Nerd Font, monospace",
+    "editor.fontSize": 13,
+    "editor.fontLigatures": false,
+    "editor.lineHeight": 1.5,
+    "editor.cursorStyle": "line",
+    "editor.cursorBlinking": "solid",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.smoothScrolling": true,
+    "editor.minimap.enabled": false,
+    "editor.scrollBeyondLastLine": false,
+    "editor.renderLineHighlight": "gutter",
+    "editor.renderWhitespace": "boundary",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "editor.guides.indentation": true,
+    "editor.suggestSelection": "first",
+    "editor.acceptSuggestionOnEnter": "smart",
+    "editor.fontWeight": "400",
+
+    // ===== Workbench =====
+    "workbench.colorTheme": "Sheol Dark",
+    "workbench.iconTheme": null,
+    "workbench.tree.indent": 16,
+    "workbench.list.smoothScrolling": true,
+    "workbench.editor.tabSizing": "shrink",
+    "workbench.editor.showTabs": "multiple",
+    "workbench.editor.tabActionLocation": "right",
+    "workbench.startupEditor": "none",
+    "workbench.activityBar.location": "default",
+    "workbench.statusBar.visible": true,
+    "workbench.sideBar.location": "left",
+    "workbench.layoutControl.enabled": false,
+
+    // ===== Window =====
+    "window.titleBarStyle": "custom",
+    "window.menuBarVisibility": "compact",
+    "window.title": "♠  ${rootName}${separator}${activeEditorShort}",
+    "window.density.editorTabHeight": "compact",
+
+    // ===== Terminal (integrated) =====
+    "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
+    "terminal.integrated.fontSize": 12,
+    "terminal.integrated.cursorStyle": "line",
+    "terminal.integrated.cursorBlinking": false,
+    "terminal.integrated.smoothScrolling": true,
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "terminal.integrated.shellIntegration.enabled": false,
+
+    // ===== Files =====
+    "files.autoSave": "onFocusChange",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.exclude": {
+        "**/.git": false,
+        "**/__pycache__": true,
+        "**/.pytest_cache": true,
+        "**/node_modules": true,
+        "**/.DS_Store": true
+    },
+
+    // ===== Explorer =====
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "explorer.compactFolders": false,
+
+    // ===== Git =====
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+
+    // ===== Sheol-specific overrides =====
+    // Override individual workbench colors to match the rice exactly,
+    // even on top of the Sheol Dark theme — useful for drift correction.
+    "workbench.colorCustomizations": {
+        "[Sheol Dark]": {
+            // Title bar matches kitty/foot's chrome
+            "titleBar.activeBackground": "#0a080d",
+            "titleBar.activeForeground": "#c9a651",
+            "titleBar.inactiveBackground": "#050507",
+            "titleBar.inactiveForeground": "#6b6470",
+            "titleBar.border": "#a08240",
+            // Activity bar / sidebar
+            "activityBar.background": "#050507",
+            "activityBar.foreground": "#a08240",
+            "activityBar.inactiveForeground": "#4a3a1f",
+            "activityBar.activeBorder": "#e8c870",
+            "activityBarBadge.background": "#5a1a1a",
+            "activityBarBadge.foreground": "#d4c8b0",
+            "sideBar.background": "#0a080d",
+            "sideBar.foreground": "#b8aea0",
+            "sideBar.border": "#1f1a26",
+            "sideBarTitle.foreground": "#c9a651",
+            "sideBarSectionHeader.background": "#14111a",
+            "sideBarSectionHeader.foreground": "#a08240",
+            // Editor
+            "editor.background": "#050507",
+            "editor.foreground": "#b8aea0",
+            "editorCursor.foreground": "#e8c870",
+            "editor.lineHighlightBackground": "#0c0a10",
+            "editor.selectionBackground": "#2a253060",
+            "editorLineNumber.foreground": "#4a3a1f",
+            "editorLineNumber.activeForeground": "#a08240",
+            "editorIndentGuide.background1": "#1f1a26",
+            "editorIndentGuide.activeBackground1": "#4a3a1f",
+            "editorBracketHighlight.foreground1": "#a08240",
+            "editorBracketHighlight.foreground2": "#c9a651",
+            "editorBracketHighlight.foreground3": "#e8c870",
+            // Tabs
+            "tab.activeBackground": "#0a080d",
+            "tab.activeForeground": "#e8c870",
+            "tab.inactiveBackground": "#050507",
+            "tab.inactiveForeground": "#6b6470",
+            "tab.activeBorderTop": "#a08240",
+            "tab.border": "#1f1a26",
+            // Status bar (the bottom strip)
+            "statusBar.background": "#050507",
+            "statusBar.foreground": "#a08240",
+            "statusBar.border": "#1f1a26",
+            "statusBar.noFolderBackground": "#0a080d",
+            "statusBar.debuggingBackground": "#5a1a1a",
+            // Terminal
+            "terminal.background": "#050507",
+            "terminal.foreground": "#b8aea0",
+            "terminalCursor.foreground": "#e8c870",
+            "terminal.ansiBlack": "#14111a",
+            "terminal.ansiRed": "#5a1a1a",
+            "terminal.ansiGreen": "#6b5530",
+            "terminal.ansiYellow": "#a08240",
+            "terminal.ansiBlue": "#6b6470",
+            "terminal.ansiMagenta": "#4a3a1f",
+            "terminal.ansiCyan": "#c9a651",
+            "terminal.ansiWhite": "#b8aea0",
+            "terminal.ansiBrightBlack": "#2a2530",
+            "terminal.ansiBrightRed": "#7a2a2a",
+            "terminal.ansiBrightGreen": "#8a7040",
+            "terminal.ansiBrightYellow": "#c9a651",
+            "terminal.ansiBrightBlue": "#8a8088",
+            "terminal.ansiBrightMagenta": "#6b5530",
+            "terminal.ansiBrightCyan": "#e8c870",
+            "terminal.ansiBrightWhite": "#d4c8b0",
+            // Misc
+            "focusBorder": "#a08240",
+            "input.background": "#0a080d",
+            "input.foreground": "#b8aea0",
+            "input.border": "#4a3a1f",
+            "button.background": "#4a3a1f",
+            "button.foreground": "#e8c870",
+            "button.hoverBackground": "#6b5530",
+            "scrollbarSlider.background": "#1f1a2680",
+            "scrollbarSlider.hoverBackground": "#4a3a1faa",
+            "scrollbarSlider.activeBackground": "#a08240aa"
+        }
+    },
+
+    // ===== Telemetry =====
+    "telemetry.telemetryLevel": "off",
+    "redhat.telemetry.enabled": false,
+
+    // ===== Update =====
+    "update.mode": "manual",
+
+    // ===== Security =====
+    "security.workspace.trust.untrustedFiles": "open"
+}

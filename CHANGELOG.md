@@ -1,5 +1,35 @@
 # SHEOL // Changelog
 
+## v4 — 2026-05-03
+
+### App-wide themes added
+
+The rice now extends beyond the compositor into every daily-driver app.
+
+- **VS Code** — `Sheol Dark` color theme as a proper extension (`pkgs/vscode/.local/share/sheol-vscode-theme/`), comprehensive `settings.json` with workbench color overrides, custom keybindings, JetBrainsMono Nerd Font, integrated terminal theming, custom title format with the spade glyph. Auto-installed to `~/.vscode/extensions/` by `install.sh`.
+- **wlogout** — Six engraved-card layout (lock, logout, suspend, hibernate, shutdown, reboot) replacing the default purple-on-grey blocks. Bound to `Super+M`. Hover state has the same halo-glow as the active workspace pulse.
+- **Obsidian** — Full theme as a proper Obsidian theme folder (`pkgs/obsidian/.config/obsidian-theme/Sheol/`). Headings in Cinzel Decorative, body in Cormorant Garamond, code in JetBrainsMono Nerd Font. All callouts, tables, blockquotes, graph view, search results themed.
+- **Firefox** — `userChrome.css` for the browser chrome (title bar, tabs, URL bar, toolbar, sidebar, menus, find bar). Auto-deployed to the default profile. Requires `toolkit.legacyUserProfileCustomizations.stylesheets = true` in `about:config`.
+- **Discord (Vencord)** — Full Discord client theme as `sheol.theme.css`. Replaces the Discord blurple with gilt across server list, channels, chat, embeds, settings, modals. BetterDiscord-compatible variant included.
+- **btop** — `sheol.theme` file that replaces btop's neon-green/yellow defaults with the gold gradient. CPU graph uses tarnish→gilt→halo.
+- **yazi** — Complete `theme.toml` with palette across status bar, mode indicators, file-type colors (gold for executables, leaf for media, sanctus for archives), gold borders.
+- **bat** — Custom `Sheol.tmTheme` (TextMate plist format) for the syntax highlighter. Cache automatically rebuilt during install.
+- **tmux** — Themed `.tmux.conf` with status bar that matches waybar's aesthetic. Useful when SSH'd into home lab nodes.
+- **lazygit** — `config.yml` with sheol palette across active border, selected lines, branch markers.
+
+### Updates
+
+- `install.sh` extended with post-stow theme installation:
+  - VS Code extension copied to `~/.vscode/extensions/`
+  - bat cache rebuilt
+  - Firefox userChrome auto-deployed to default profile
+  - Vencord theme dropped in `~/.config/Vencord/themes/`
+  - Obsidian theme path printed for manual vault placement
+  - Final verification expanded to check all theme files
+- New packages added to install.sh package list: `wlogout`, `firefox`, `code`, `tmux`, `lazygit`
+- New keybind: `Super+M` opens wlogout
+- README updated with full "App themes" section documenting each theme and its activation
+
 ## v3 — 2026-05-03
 
 ### Fixes (from VM testing through fresh install)

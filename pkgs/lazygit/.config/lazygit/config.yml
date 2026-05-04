@@ -1,0 +1,92 @@
+# =============================================================================
+#  SHEOL // lazygit config
+#  Theme + sane defaults.
+# =============================================================================
+
+gui:
+    theme:
+        activeBorderColor:
+            - "#e8c870"
+            - bold
+        inactiveBorderColor:
+            - "#4a3a1f"
+        optionsTextColor:
+            - "#a08240"
+        selectedLineBgColor:
+            - "#14111a"
+        cherryPickedCommitBgColor:
+            - "#4a3a1f"
+        cherryPickedCommitFgColor:
+            - "#e8c870"
+        unstagedChangesColor:
+            - "#5a1a1a"
+        defaultFgColor:
+            - "#b8aea0"
+        searchingActiveBorderColor:
+            - "#e8c870"
+
+    showFileTree: true
+    showListFooter: true
+    showRandomTip: false
+    showCommandLog: true
+    showBottomLine: true
+    showIcons: false
+    nerdFontsVersion: "3"
+    expandFocusedSidePanel: false
+    sidePanelWidth: 0.3333
+    mainPanelSplitMode: "flexible"
+    enlargedSideViewLocation: "left"
+    language: "auto"
+    timeFormat: "02 Jan 06 15:04"
+
+    border: "single"
+    animateExplosion: false
+
+    commitLength:
+        show: true
+    skipDiscardChangeWarning: false
+    skipStashWarning: false
+    skipNoStagedFilesWarning: false
+    skipRewordInEditorWarning: false
+
+    mouseEvents: true
+
+git:
+    paging:
+        colorArg: always
+        useConfig: false
+    commit:
+        signOff: false
+        autoWrapCommitMessage: true
+        autoWrapWidth: 72
+    merging:
+        manualCommit: false
+        args: ""
+    log:
+        order: "topo-order"
+        showGraph: "always"
+        showWholeGraph: false
+    skipHookPrefix: WIP
+    autoFetch: true
+    autoRefresh: true
+    fetchAll: true
+    branchLogCmd: 'git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium {{branchName}} --'
+    allBranchesLogCmd: 'git log --graph --all --color=always --abbrev-commit --decorate --date=relative --pretty=medium'
+
+os:
+    editPreset: "nvim"
+
+confirmOnQuit: false
+quitOnTopLevelReturn: false
+disableStartupPopups: true
+notARepository: "prompt"
+promptToReturnFromSubprocess: true
+
+keybinding:
+    universal:
+        quit: "q"
+        quit-alt1: "<c-c>"
+        return: "<esc>"
+        togglePanel: "<tab>"
+        prevItem: "<up>"
+        nextItem: "<down>"

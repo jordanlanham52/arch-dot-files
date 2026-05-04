@@ -1,0 +1,8 @@
+# Sheol palette by default
+--theme="Sheol"
+# Subtle style — no decorations beyond grid
+--style="grid,header"
+# Wrap long lines at terminal width
+--wrap=character
+# Italic comments
+--italic-text=always

@@ -1,0 +1,212 @@
+/* =============================================================================
+   SHEOL — Firefox userChrome.css
+   Themes the browser chrome (title bar, tabs, sidebar, urlbar) to match
+   the rest of the rice. Engraved tabs, gold-on-abyss palette.
+
+   To activate:
+   1. about:config → toolkit.legacyUserProfileCustomizations.stylesheets = true
+   2. Find your profile dir: about:profiles → Root Directory
+   3. mkdir <profile-dir>/chrome
+   4. Copy this file there as userChrome.css
+   5. Restart Firefox
+   ============================================================================= */
+
+@-moz-document url("chrome://browser/content/browser.xhtml") {
+    :root {
+        --abyss: #050507;
+        --crypt: #0c0a10;
+        --sepulcher: #14111a;
+        --shroud: #1f1a26;
+        --bone: #b8aea0;
+        --linen: #6b6470;
+        --tarnish: #4a3a1f;
+        --oxide: #6b5530;
+        --gilt: #a08240;
+        --leaf: #c9a651;
+        --halo: #e8c870;
+        --sanctus: #5a1a1a;
+    }
+
+    /* ---- Title bar / window chrome --------------------------------------- */
+    #navigator-toolbox {
+        background: var(--abyss) !important;
+        border-bottom: 1px solid var(--shroud) !important;
+    }
+
+    /* Title bar text */
+    #titlebar {
+        background: var(--abyss) !important;
+    }
+
+    /* ---- Tabs ------------------------------------------------------------- */
+    #tabbrowser-tabs {
+        --tab-min-height: 32px !important;
+        background: var(--abyss) !important;
+    }
+
+    .tabbrowser-tab {
+        font-family: "Cormorant Garamond", serif !important;
+        font-size: 12px !important;
+    }
+
+    .tab-background {
+        background: transparent !important;
+        border-radius: 0 !important;
+    }
+
+    .tab-background[selected="true"] {
+        background: var(--crypt) !important;
+        border-top: 1px solid var(--gilt) !important;
+        border-radius: 0 !important;
+    }
+
+    .tab-content {
+        color: var(--linen) !important;
+    }
+
+    .tabbrowser-tab[selected="true"] .tab-content {
+        color: var(--halo) !important;
+    }
+
+    .tabbrowser-tab:not([selected="true"]):hover .tab-background {
+        background: var(--sepulcher) !important;
+    }
+
+    /* New tab button */
+    #tabs-newtab-button {
+        color: var(--gilt) !important;
+    }
+
+    /* ---- Address bar ----------------------------------------------------- */
+    #urlbar-background {
+        background: var(--crypt) !important;
+        border: 1px solid var(--tarnish) !important;
+        border-radius: 0 !important;
+    }
+
+    #urlbar[focused="true"] > #urlbar-background {
+        border: 1px solid var(--gilt) !important;
+        box-shadow: 0 0 0 1px var(--tarnish) !important;
+    }
+
+    #urlbar-input {
+        color: var(--bone) !important;
+        font-family: "JetBrainsMono Nerd Font", monospace !important;
+        font-size: 12px !important;
+    }
+
+    /* URL bar suggestions dropdown */
+    .urlbarView {
+        background: var(--crypt) !important;
+        border: 1px solid var(--tarnish) !important;
+        border-radius: 0 !important;
+    }
+
+    .urlbarView-row[selected],
+    .urlbarView-row:hover {
+        background: var(--sepulcher) !important;
+    }
+
+    .urlbarView-title {
+        color: var(--bone) !important;
+    }
+
+    .urlbarView-url {
+        color: var(--gilt) !important;
+    }
+
+    /* ---- Toolbar ---------------------------------------------------------- */
+    #nav-bar {
+        background: var(--abyss) !important;
+        border-top: 1px solid var(--shroud) !important;
+        border-bottom: 1px solid var(--shroud) !important;
+    }
+
+    #PersonalToolbar {
+        background: var(--abyss) !important;
+        border-bottom: 1px solid var(--shroud) !important;
+    }
+
+    /* Toolbar buttons */
+    .toolbarbutton-1 {
+        --toolbarbutton-icon-fill: var(--gilt) !important;
+    }
+
+    .toolbarbutton-1:hover {
+        background: var(--sepulcher) !important;
+    }
+
+    .toolbarbutton-1[open="true"] {
+        background: var(--crypt) !important;
+    }
+
+    /* ---- Sidebar --------------------------------------------------------- */
+    #sidebar-box {
+        background: var(--crypt) !important;
+        border-right: 1px solid var(--shroud) !important;
+    }
+
+    #sidebar-header {
+        background: var(--sepulcher) !important;
+        color: var(--leaf) !important;
+        font-family: "Cinzel Decorative", serif !important;
+        border-bottom: 1px solid var(--tarnish) !important;
+    }
+
+    /* Bookmarks toolbar items */
+    .bookmark-item {
+        color: var(--bone) !important;
+    }
+
+    .bookmark-item:hover {
+        background: var(--sepulcher) !important;
+    }
+
+    /* ---- Menu / popups ---------------------------------------------------- */
+    menupopup, panel {
+        --panel-background: var(--crypt) !important;
+        --panel-border-color: var(--tarnish) !important;
+        --panel-color: var(--bone) !important;
+    }
+
+    menuitem:hover, menu:hover {
+        background: var(--sepulcher) !important;
+        color: var(--halo) !important;
+    }
+
+    /* ---- Find bar -------------------------------------------------------- */
+    .findbar-container {
+        background: var(--crypt) !important;
+        border-top: 1px solid var(--gilt) !important;
+    }
+
+    /* ---- Status panel ---------------------------------------------------- */
+    #statuspanel-label {
+        background: var(--crypt) !important;
+        color: var(--linen) !important;
+        border: 1px solid var(--tarnish) !important;
+        border-radius: 0 !important;
+        font-family: "JetBrainsMono Nerd Font", monospace !important;
+    }
+
+    /* ---- Scrollbars ------------------------------------------------------- */
+    scrollbar {
+        background: transparent !important;
+    }
+
+    scrollbar slider {
+        background: var(--shroud) !important;
+    }
+
+    scrollbar slider:hover {
+        background: var(--tarnish) !important;
+    }
+}
+
+/* New Tab page styling — applies to about:newtab + about:home */
+@-moz-document url-prefix("about:home"), url-prefix("about:newtab") {
+    body {
+        background: var(--abyss) !important;
+        color: var(--bone) !important;
+    }
+}

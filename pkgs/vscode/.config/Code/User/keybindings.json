@@ -1,0 +1,22 @@
+[
+    // Open integrated terminal (matches Super+Return habit, but inside VS Code)
+    {
+        "key": "ctrl+shift+t",
+        "command": "workbench.action.terminal.toggleTerminal"
+    },
+    // Quick file palette
+    {
+        "key": "ctrl+p",
+        "command": "workbench.action.quickOpen"
+    },
+    // Toggle sidebar
+    {
+        "key": "ctrl+b",
+        "command": "workbench.action.toggleSidebarVisibility"
+    },
+    // Split editor right
+    {
+        "key": "ctrl+\\",
+        "command": "workbench.action.splitEditor"
+    }
+]

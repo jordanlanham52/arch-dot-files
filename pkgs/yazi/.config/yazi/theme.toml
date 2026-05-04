@@ -1,0 +1,118 @@
+# =============================================================================
+#  SHEOL // yazi theme
+#  Gold-on-abyss file manager. Replaces yazi's default neon palette.
+# =============================================================================
+
+[manager]
+cwd = { fg = "#c9a651" }
+hovered = { reversed = true }
+preview_hovered = { underline = true }
+find_keyword = { fg = "#e8c870", italic = true }
+find_position = { fg = "#a08240", bg = "reset", italic = true }
+marker_copied   = { fg = "#6b5530", bg = "#6b5530" }
+marker_cut      = { fg = "#5a1a1a", bg = "#5a1a1a" }
+marker_marked   = { fg = "#a08240", bg = "#a08240" }
+marker_selected = { fg = "#c9a651", bg = "#c9a651" }
+tab_active   = { fg = "#e8c870", bg = "#14111a", bold = true }
+tab_inactive = { fg = "#6b6470", bg = "#0a080d" }
+tab_width = 1
+count_copied   = { fg = "#050507", bg = "#6b5530" }
+count_cut      = { fg = "#050507", bg = "#5a1a1a" }
+count_selected = { fg = "#050507", bg = "#a08240" }
+border_symbol = "│"
+border_style  = { fg = "#4a3a1f" }
+syntect_theme = ""
+
+[mode]
+normal_main = { fg = "#050507", bg = "#a08240", bold = true }
+normal_alt  = { fg = "#a08240", bg = "#14111a" }
+select_main = { fg = "#050507", bg = "#c9a651", bold = true }
+select_alt  = { fg = "#c9a651", bg = "#14111a" }
+unset_main  = { fg = "#050507", bg = "#5a1a1a", bold = true }
+unset_alt   = { fg = "#5a1a1a", bg = "#14111a" }
+
+[status]
+separator_open  = ""
+separator_close = ""
+separator_style = { fg = "#1f1a26", bg = "#1f1a26" }
+progress_label  = { fg = "#e8c870", bold = true }
+progress_normal = { fg = "#a08240", bg = "#14111a" }
+progress_error  = { fg = "#5a1a1a", bg = "#14111a" }
+permissions_t = { fg = "#c9a651" }
+permissions_r = { fg = "#a08240" }
+permissions_w = { fg = "#5a1a1a" }
+permissions_x = { fg = "#6b5530" }
+permissions_s = { fg = "#6b6470" }
+
+[input]
+border   = { fg = "#a08240" }
+title    = { fg = "#c9a651" }
+value    = { fg = "#b8aea0" }
+selected = { reversed = true }
+
+[select]
+border   = { fg = "#a08240" }
+active   = { fg = "#e8c870" }
+inactive = { fg = "#6b6470" }
+
+[tasks]
+border   = { fg = "#a08240" }
+title    = { fg = "#c9a651" }
+hovered  = { fg = "#e8c870", underline = true }
+
+[which]
+mask            = { bg = "#0a080d" }
+cand            = { fg = "#c9a651" }
+rest            = { fg = "#6b6470" }
+desc            = { fg = "#a08240" }
+separator       = "  "
+separator_style = { fg = "#4a3a1f" }
+
+[help]
+on      = { fg = "#e8c870" }
+exec    = { fg = "#c9a651" }
+desc    = { fg = "#b8aea0" }
+hovered = { bg = "#14111a", bold = true }
+footer  = { fg = "#a08240", bg = "#0a080d" }
+
+[notify]
+title_info = { fg = "#a08240" }
+title_warn = { fg = "#c9a651" }
+title_error = { fg = "#5a1a1a" }
+
+[filetype]
+rules = [
+    # Images — gilt
+    { mime = "image/*", fg = "#c9a651" },
+    # Video — leaf
+    { mime = "video/*", fg = "#c9a651" },
+    # Audio — leaf
+    { mime = "audio/*", fg = "#c9a651" },
+    # PDFs — halo
+    { mime = "application/pdf", fg = "#e8c870" },
+    # Archives — sanctus crimson
+    { mime = "application/zip", fg = "#7a2a2a" },
+    { mime = "application/x-tar", fg = "#7a2a2a" },
+    { mime = "application/x-7z-compressed", fg = "#7a2a2a" },
+    { mime = "application/x-bzip2", fg = "#7a2a2a" },
+    { mime = "application/gzip", fg = "#7a2a2a" },
+    # Executables — halo bold
+    { name = "*.sh", fg = "#e8c870", bold = true },
+    { name = "*.py", fg = "#e8c870" },
+    { name = "*.rs", fg = "#e8c870" },
+    { name = "*.go", fg = "#e8c870" },
+    # Configs — gilt
+    { name = "*.toml", fg = "#a08240" },
+    { name = "*.yaml", fg = "#a08240" },
+    { name = "*.yml",  fg = "#a08240" },
+    { name = "*.json", fg = "#a08240" },
+    { name = "*.conf", fg = "#a08240" },
+    # Markdown — bone
+    { name = "*.md", fg = "#b8aea0", italic = true },
+    # Hidden files — tarnish
+    { name = ".*", fg = "#4a3a1f" },
+    # Fallback
+    { name = "*", fg = "#b8aea0" },
+    # Directories last (so they override file rules)
+    { name = "*/", fg = "#c9a651", bold = true },
+]

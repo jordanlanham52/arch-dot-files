@@ -1,0 +1,274 @@
+/**
+ * @name Sheol
+ * @author Jordan Lanham
+ * @version 1.0.0
+ * @description The Tarnished Reliquary as a Discord theme — gold-on-abyss, no cool tones.
+ * @website https://github.com/jordanlanham52/arch-dot-files
+ *
+ * Drop in:  ~/.config/Vencord/themes/sheol.theme.css
+ * Or load via Vencord settings → Themes → Add → paste this file
+ */
+
+:root {
+    /* sheol palette */
+    --abyss: #050507;
+    --crypt: #0c0a10;
+    --sepulcher: #14111a;
+    --shroud: #1f1a26;
+    --ash: #2a2530;
+    --linen: #6b6470;
+    --bone: #b8aea0;
+    --relic: #d4c8b0;
+    --pallor: #e8dfd0;
+    --tarnish: #4a3a1f;
+    --oxide: #6b5530;
+    --gilt: #a08240;
+    --leaf: #c9a651;
+    --halo: #e8c870;
+    --sanctus: #5a1a1a;
+}
+
+/* ---- Discord variable overrides ----------------------------------------- */
+.theme-dark, .theme-darker, .theme-light {
+    /* Backgrounds */
+    --background-primary: var(--abyss) !important;
+    --background-secondary: var(--crypt) !important;
+    --background-secondary-alt: var(--sepulcher) !important;
+    --background-tertiary: var(--abyss) !important;
+    --background-accent: var(--shroud) !important;
+    --background-floating: var(--crypt) !important;
+    --background-mobile-primary: var(--abyss) !important;
+    --background-mobile-secondary: var(--crypt) !important;
+    --background-modifier-hover: rgba(74, 58, 31, 0.15) !important;
+    --background-modifier-active: rgba(160, 130, 64, 0.2) !important;
+    --background-modifier-selected: rgba(232, 200, 112, 0.1) !important;
+    --background-modifier-accent: var(--ash) !important;
+
+    /* Foregrounds */
+    --text-normal: var(--bone) !important;
+    --text-muted: var(--linen) !important;
+    --text-link: var(--leaf) !important;
+    --text-link-low-saturation: var(--gilt) !important;
+    --text-positive: var(--oxide) !important;
+    --text-warning: var(--leaf) !important;
+    --text-danger: var(--sanctus) !important;
+    --text-brand: var(--halo) !important;
+    --interactive-normal: var(--linen) !important;
+    --interactive-hover: var(--bone) !important;
+    --interactive-active: var(--halo) !important;
+    --interactive-muted: var(--tarnish) !important;
+    --header-primary: var(--leaf) !important;
+    --header-secondary: var(--gilt) !important;
+
+    /* Channels */
+    --channels-default: var(--linen) !important;
+    --channeltextarea-background: var(--sepulcher) !important;
+
+    /* Brand color (the Discord blurple) — replace with gilt */
+    --brand: 160, 130, 64 !important;
+    --brand-experiment: var(--gilt) !important;
+    --brand-experiment-100: var(--halo) !important;
+    --brand-experiment-200: var(--leaf) !important;
+    --brand-experiment-300: var(--gilt) !important;
+    --brand-experiment-400: var(--gilt) !important;
+    --brand-experiment-500: var(--gilt) !important;
+    --brand-experiment-560: var(--oxide) !important;
+    --brand-experiment-600: var(--oxide) !important;
+    --brand-experiment-700: var(--tarnish) !important;
+    --brand-experiment-800: var(--tarnish) !important;
+    --brand-experiment-900: var(--tarnish) !important;
+    --brand-experiment-05a: rgba(160, 130, 64, 0.05) !important;
+    --brand-experiment-10a: rgba(160, 130, 64, 0.10) !important;
+    --brand-experiment-15a: rgba(160, 130, 64, 0.15) !important;
+    --brand-experiment-20a: rgba(160, 130, 64, 0.20) !important;
+    --brand-experiment-25a: rgba(160, 130, 64, 0.25) !important;
+    --brand-experiment-30a: rgba(160, 130, 64, 0.30) !important;
+
+    /* Status colors */
+    --status-positive-background: var(--oxide) !important;
+    --status-positive-text: var(--relic) !important;
+    --status-warning-background: var(--gilt) !important;
+    --status-warning-text: var(--abyss) !important;
+    --status-danger-background: var(--sanctus) !important;
+    --status-danger-text: var(--relic) !important;
+    --status-online: var(--oxide) !important;
+    --status-idle: var(--leaf) !important;
+    --status-dnd: var(--sanctus) !important;
+    --status-streaming: var(--gilt) !important;
+
+    /* Scrollbars */
+    --scrollbar-thin-thumb: var(--shroud) !important;
+    --scrollbar-thin-track: transparent !important;
+    --scrollbar-auto-thumb: var(--shroud) !important;
+    --scrollbar-auto-track: transparent !important;
+    --scrollbar-auto-scrollbar-color-thumb: var(--shroud) !important;
+    --scrollbar-auto-scrollbar-color-track: transparent !important;
+
+    /* Mention highlighting */
+    --mention-background: rgba(160, 130, 64, 0.1) !important;
+    --mention-foreground: var(--halo) !important;
+
+    /* Modal */
+    --modal-background: var(--abyss) !important;
+    --modal-footer-background: var(--crypt) !important;
+
+    /* Buttons */
+    --button-positive-background: var(--oxide) !important;
+    --button-positive-background-hover: var(--gilt) !important;
+    --button-secondary-background: var(--shroud) !important;
+    --button-secondary-background-hover: var(--ash) !important;
+    --button-danger-background: var(--sanctus) !important;
+    --button-danger-background-hover: #7a2a2a !important;
+
+    /* Inputs */
+    --input-background: var(--sepulcher) !important;
+    --deprecated-text-input-bg: var(--sepulcher) !important;
+
+    /* Activity bar */
+    --activity-bar-background: var(--abyss) !important;
+
+    /* Server (guild) icons */
+    --guild-header-text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6) !important;
+
+    /* Spoiler */
+    --spoiler-revealed-background: var(--shroud) !important;
+    --spoiler-hidden-background: var(--ash) !important;
+
+    /* Inline code */
+    --code-background: var(--crypt) !important;
+}
+
+/* ---- Server list (left rail) -------------------------------------------- */
+[class*="guilds_"],
+[class*="sidebar_"] {
+    background: var(--abyss) !important;
+    border-right: 1px solid var(--shroud) !important;
+}
+
+[class*="guildSeparator_"] {
+    background: var(--tarnish) !important;
+}
+
+/* Selected server pill — make it gold instead of white */
+[class*="pill_"] [class*="selected_"],
+[class*="pill_"] [class*="item_"] {
+    background-color: var(--halo) !important;
+}
+
+/* ---- Channel sidebar ---------------------------------------------------- */
+[class*="container_"][class*="channelTextArea"] {
+    background: var(--sepulcher) !important;
+}
+
+/* Channel list items */
+[class*="containerDefault_"]:hover {
+    background: var(--sepulcher) !important;
+}
+
+[class*="modeSelected_"] {
+    background: var(--shroud) !important;
+}
+
+[class*="modeSelected_"] [class*="name_"] {
+    color: var(--halo) !important;
+}
+
+/* ---- Chat area ---------------------------------------------------------- */
+[class*="chat_"] {
+    background: var(--abyss) !important;
+}
+
+/* Message hover */
+[class*="message_"]:hover,
+[class*="messageListItem_"]:hover {
+    background: var(--crypt) !important;
+}
+
+/* Inline code */
+code {
+    background: var(--crypt) !important;
+    border: 1px solid var(--shroud) !important;
+    color: var(--leaf) !important;
+    border-radius: 0 !important;
+    font-family: "JetBrainsMono Nerd Font", monospace !important;
+}
+
+/* Code blocks */
+pre code {
+    background: var(--crypt) !important;
+    border: 1px solid var(--tarnish) !important;
+    border-radius: 0 !important;
+    font-family: "JetBrainsMono Nerd Font", monospace !important;
+}
+
+/* Mentions */
+[class*="mention"] {
+    background: rgba(160, 130, 64, 0.1) !important;
+    color: var(--halo) !important;
+    border: 1px solid var(--tarnish) !important;
+    border-radius: 0 !important;
+    padding: 0 4px !important;
+}
+
+[class*="mention"]:hover {
+    background: rgba(160, 130, 64, 0.2) !important;
+}
+
+/* Embeds */
+[class*="embedFull_"] {
+    background: var(--crypt) !important;
+    border-left-color: var(--gilt) !important;
+    border-radius: 0 !important;
+}
+
+/* User profile popup */
+[class*="userPopout"],
+[class*="userProfileOuterUnthemed_"] {
+    background: var(--abyss) !important;
+    border: 1px solid var(--gilt) !important;
+    border-radius: 0 !important;
+}
+
+/* Member list */
+[class*="members_"] {
+    background: var(--abyss) !important;
+    border-left: 1px solid var(--shroud) !important;
+}
+
+/* ---- Settings ----------------------------------------------------------- */
+[class*="standardSidebarView_"] {
+    background: var(--abyss) !important;
+}
+
+[class*="contentColumn"] {
+    background: var(--crypt) !important;
+}
+
+[class*="sidebarRegion_"] {
+    background: var(--abyss) !important;
+}
+
+/* ---- Buttons everywhere ------------------------------------------------- */
+button[class*="lookFilled_"][class*="colorBrand_"] {
+    background-color: var(--gilt) !important;
+    color: var(--abyss) !important;
+}
+
+button[class*="lookFilled_"][class*="colorBrand_"]:hover {
+    background-color: var(--leaf) !important;
+}
+
+/* ---- Scrollbar fine-tuning --------------------------------------------- */
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-track {
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--shroud) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--tarnish) !important;
+}

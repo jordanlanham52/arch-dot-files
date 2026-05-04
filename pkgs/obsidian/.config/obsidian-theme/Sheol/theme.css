@@ -1,0 +1,379 @@
+/* =============================================================================
+   SHEOL — Obsidian theme
+   The Tarnished Reliquary as a knowledge base. Gold-on-abyss, restraint, no cool tones.
+   ============================================================================= */
+
+/* ---- Color tokens ---------------------------------------------------------- */
+.theme-dark {
+    /* Backgrounds */
+    --background-primary: #050507;
+    --background-primary-alt: #0a080d;
+    --background-secondary: #0c0a10;
+    --background-secondary-alt: #14111a;
+    --background-modifier-border: #1f1a26;
+    --background-modifier-border-hover: #4a3a1f;
+    --background-modifier-border-focus: #a08240;
+    --background-modifier-form-field: #0a080d;
+    --background-modifier-hover: #14111a;
+    --background-modifier-active-hover: #4a3a1f30;
+    --background-modifier-success: #6b553030;
+    --background-modifier-error: #5a1a1a30;
+    --background-modifier-error-hover: #5a1a1a50;
+
+    /* Foregrounds */
+    --text-normal: #b8aea0;
+    --text-muted: #6b6470;
+    --text-faint: #4a3a1f;
+    --text-on-accent: #050507;
+    --text-error: #5a1a1a;
+    --text-success: #6b5530;
+    --text-warning: #c9a651;
+    --text-accent: #c9a651;
+    --text-accent-hover: #e8c870;
+    --text-selection: #2a253080;
+    --text-highlight-bg: #4a3a1f80;
+    --text-on-accent-inverted: #b8aea0;
+
+    /* Interactive accents */
+    --interactive-normal: #14111a;
+    --interactive-hover: #1f1a26;
+    --interactive-accent: #a08240;
+    --interactive-accent-hover: #c9a651;
+    --interactive-accent-rgb: 160, 130, 64;
+
+    /* Headings */
+    --h1-color: #e8c870;
+    --h2-color: #c9a651;
+    --h3-color: #a08240;
+    --h4-color: #b8aea0;
+    --h5-color: #b8aea0;
+    --h6-color: #6b6470;
+
+    /* Code */
+    --code-background: #0c0a10;
+    --code-normal: #c9a651;
+    --code-keyword: #a08240;
+    --code-string: #c9a651;
+    --code-function: #e8c870;
+    --code-comment: #4a3a1f;
+    --code-tag: #a08240;
+    --code-property: #c9a651;
+    --code-important: #5a1a1a;
+    --code-value: #d4c8b0;
+    --code-punctuation: #6b6470;
+
+    /* Tags */
+    --tag-color: #c9a651;
+    --tag-background: #14111a;
+    --tag-color-hover: #e8c870;
+    --tag-background-hover: #1f1a26;
+
+    /* Tables */
+    --table-header-background: #14111a;
+    --table-header-border-color: #4a3a1f;
+    --table-cell-border-color: #1f1a26;
+    --table-row-alt-background: #0c0a10;
+    --table-row-background-hover: #14111a;
+
+    /* Checklist */
+    --checklist-done-color: #4a3a1f;
+    --checklist-done-decoration: line-through;
+
+    /* Quotes */
+    --blockquote-border-color: #a08240;
+    --blockquote-color: #d4c8b0;
+    --blockquote-background-color: #0a080d;
+
+    /* Links */
+    --link-color: #c9a651;
+    --link-color-hover: #e8c870;
+    --link-decoration: none;
+    --link-decoration-hover: underline;
+    --link-unresolved-color: #5a1a1a;
+    --link-unresolved-opacity: 0.85;
+    --link-external-color: #a08240;
+
+    /* Scrollbars */
+    --scrollbar-bg: transparent;
+    --scrollbar-thumb-bg: #1f1a26;
+    --scrollbar-active-thumb-bg: #4a3a1f;
+
+    /* Callouts */
+    --callout-info: 107, 100, 112;
+    --callout-success: 107, 85, 48;
+    --callout-warning: 201, 166, 81;
+    --callout-error: 90, 26, 26;
+    --callout-question: 160, 130, 64;
+    --callout-bug: 122, 42, 42;
+    --callout-note: 184, 174, 160;
+    --callout-quote: 232, 200, 112;
+
+    /* Graph view */
+    --graph-line: #4a3a1f;
+    --graph-node: #b8aea0;
+    --graph-node-unresolved: #5a1a1a;
+    --graph-node-focused: #e8c870;
+    --graph-node-tag: #c9a651;
+    --graph-node-attachment: #6b5530;
+    --graph-text: #b8aea0;
+}
+
+/* ---- Typography ------------------------------------------------------------ */
+body {
+    --font-text-theme: "Cormorant Garamond", "Georgia", serif;
+    --font-monospace-theme: "JetBrainsMono Nerd Font", monospace;
+    --font-interface-theme: "Cinzel Decorative", system-ui, sans-serif;
+    --font-text-size: 16px;
+    --line-height-normal: 1.6;
+    --line-height-tight: 1.3;
+}
+
+/* H1 gets gilded weight + tracking */
+.markdown-source-view h1,
+.markdown-rendered h1 {
+    font-family: "Cinzel Decorative", serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding-bottom: 0.2em;
+}
+
+.markdown-source-view h2,
+.markdown-rendered h2 {
+    font-family: "Cinzel Decorative", serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.markdown-source-view h3,
+.markdown-rendered h3 {
+    font-family: "Cinzel Decorative", serif;
+    font-weight: 400;
+}
+
+/* Cursor color */
+.cm-cursor, .CodeMirror-cursor {
+    border-left-color: #e8c870 !important;
+}
+
+/* Selection */
+::selection,
+.cm-selected,
+.cm-selectionBackground {
+    background-color: #2a253080 !important;
+}
+
+/* Tab bar */
+.workspace-tab-header.is-active {
+    background-color: var(--background-primary-alt);
+    border-top: 1px solid var(--interactive-accent);
+}
+
+/* Status bar at bottom */
+.status-bar {
+    background: var(--background-primary);
+    border-top: 1px solid var(--background-modifier-border);
+    color: var(--interactive-accent);
+    font-family: var(--font-monospace-theme);
+    font-size: 11px;
+}
+
+/* Inline code */
+code {
+    font-family: var(--font-monospace-theme);
+    background: var(--code-background);
+    color: var(--code-normal);
+    padding: 1px 5px;
+    border-radius: 0;
+    border: 1px solid var(--background-modifier-border);
+}
+
+pre code {
+    border: none;
+    padding: 0;
+    background: transparent;
+}
+
+pre {
+    background: var(--code-background);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 0;
+}
+
+/* Blockquote — leave room for the gold left bar */
+blockquote {
+    border-left: 3px solid var(--blockquote-border-color);
+    padding-left: 1em;
+    font-family: var(--font-text-theme);
+    font-style: italic;
+    color: var(--blockquote-color);
+}
+
+/* Links — italic gilt */
+a {
+    color: var(--link-color);
+    font-style: italic;
+}
+
+a:hover {
+    color: var(--link-color-hover);
+}
+
+/* Internal links */
+.internal-link {
+    text-decoration: none;
+    border-bottom: 1px dotted var(--link-color);
+}
+
+.internal-link.is-unresolved {
+    color: var(--link-unresolved-color);
+    border-bottom-style: dashed;
+}
+
+/* External links get a small marker */
+.external-link::after {
+    content: " ↗";
+    font-size: 0.85em;
+    color: var(--text-faint);
+}
+
+/* Tags */
+.tag {
+    background: var(--tag-background);
+    color: var(--tag-color);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 0;
+    font-family: var(--font-monospace-theme);
+    font-size: 0.85em;
+    padding: 1px 6px;
+    text-decoration: none;
+}
+
+/* HR — divider with center pip */
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right,
+        transparent,
+        var(--interactive-accent) 20%,
+        var(--interactive-accent) 80%,
+        transparent);
+    margin: 2em 0;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+}
+
+th {
+    background: var(--table-header-background);
+    color: var(--text-accent);
+    font-family: "Cinzel Decorative", serif;
+    font-weight: 500;
+    border-bottom: 2px solid var(--table-header-border-color);
+}
+
+td {
+    border-bottom: 1px solid var(--table-cell-border-color);
+}
+
+/* Sidebars */
+.workspace-leaf,
+.nav-files-container {
+    background: var(--background-primary);
+}
+
+.nav-folder-title,
+.nav-file-title {
+    color: var(--text-muted);
+    border-radius: 0;
+}
+
+.nav-folder-title.is-active,
+.nav-file-title.is-active {
+    color: var(--text-accent-hover);
+    background: var(--background-secondary-alt);
+    border-left: 2px solid var(--interactive-accent);
+}
+
+.nav-folder-title:hover,
+.nav-file-title:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+/* Properties / frontmatter */
+.metadata-property-value {
+    color: var(--text-normal);
+}
+
+.metadata-property-key {
+    color: var(--text-accent);
+    font-family: var(--font-monospace-theme);
+    font-size: 0.85em;
+}
+
+/* Search results */
+.search-result-file-title {
+    color: var(--text-accent);
+    font-family: "Cinzel Decorative", serif;
+}
+
+.search-result-file-match-text {
+    background: var(--text-highlight-bg);
+    color: var(--text-normal);
+}
+
+/* Modal dialogs */
+.modal {
+    background: var(--background-primary);
+    border: 1px solid var(--interactive-accent);
+    border-radius: 0;
+}
+
+.modal-title {
+    font-family: "Cinzel Decorative", serif;
+    color: var(--text-accent);
+    letter-spacing: 1px;
+}
+
+/* Buttons */
+button.mod-cta,
+.dropdown {
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    border-radius: 0;
+    font-family: "Cinzel Decorative", serif;
+    letter-spacing: 0.5px;
+    border: none;
+}
+
+button.mod-cta:hover,
+.dropdown:hover {
+    background: var(--interactive-accent-hover);
+}
+
+/* Callouts — give them sheol presence */
+.callout {
+    border-radius: 0;
+    border-left-width: 3px;
+    background: rgba(20, 17, 26, 0.4);
+}
+
+.callout[data-callout="warning"] {
+    --callout-color: var(--callout-warning);
+}
+
+.callout[data-callout="error"],
+.callout[data-callout="danger"] {
+    --callout-color: var(--callout-error);
+}
+
+/* Highlight */
+mark, .cm-highlight {
+    background: var(--text-highlight-bg);
+    color: var(--text-normal);
+    padding: 1px 3px;
+    border-radius: 0;
+}

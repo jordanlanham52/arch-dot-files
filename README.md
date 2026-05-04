@@ -198,7 +198,34 @@ Reboot. You'll land on TTY1 with the Hyprland launch prompt.
 
 ---
 
-## Customization
+## App themes
+
+The rice extends beyond Hyprland into all your daily-driver apps. Every one is themed in the same gold-on-abyss palette.
+
+### Automatically installed by `install.sh`
+
+- **VS Code** — `Sheol Dark` color theme, custom `settings.json`, JetBrainsMono Nerd Font, custom title format (`♠ project · file`). Activate with Cmd+K Cmd+T → Sheol Dark.
+- **btop** — `sheol.theme` replacing the neon defaults. Already pre-selected in `btop.conf`.
+- **yazi** — full `theme.toml` with sheol palette, custom file-type colors, gold borders.
+- **bat** — `Sheol.tmTheme` plus a config that uses it by default. Cache rebuilt during install.
+- **tmux** — `.tmux.conf` with sheol-themed status bar matching waybar.
+- **lazygit** — `config.yml` with the palette baked in.
+- **wlogout** — six-button engraved-card layout. Bound to `Super+M`.
+
+### Activated with one extra step
+
+- **Firefox** — `userChrome.css` is copied to your profile automatically, but Firefox needs a flag toggled. Open `about:config`, search for `toolkit.legacyUserProfileCustomizations.stylesheets`, set to `true`, restart.
+- **Discord (Vencord)** — theme file is placed in `~/.config/Vencord/themes/sheol.theme.css`. In Discord: User Settings → Vencord → Themes → enable `sheol`.
+- **Obsidian** — theme placed at `pkgs/obsidian/.config/obsidian-theme/Sheol/`. Copy this folder into your vault: `cp -r pkgs/obsidian/.config/obsidian-theme/Sheol <vault>/.obsidian/themes/`. Then in Obsidian: Settings → Appearance → Theme: Sheol.
+
+### Other already-themed components
+
+- **Hyprland, hyprlock, waybar, rofi, swaync, kitty, foot, ghostty, fastfetch, neovim, starship** — themed via the regular dotfile stow.
+- **TTY console** — sheol palette via `setvtrgb` and the bundled systemd service.
+
+---
+
+
 
 ### Changing the palette
 

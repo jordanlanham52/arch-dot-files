@@ -1,0 +1,66 @@
+/* =============================================================================
+   SHEOL // wlogout/style.css
+   Six engraved cards. Dark glass, hairline gold borders, halo on hover.
+   ============================================================================= */
+
+* {
+    background-image: none;
+    box-shadow: none;
+    transition: all 200ms ease;
+}
+
+window {
+    background: rgba(5, 5, 7, 0.92);
+    font-family: "Cinzel Decorative", "Cormorant Garamond", serif;
+}
+
+button {
+    color: #6b6470;
+    background: rgba(20, 17, 26, 0.85);
+    border: 1px solid #4a3a1f;
+    margin: 14px;
+    border-radius: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 25%;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: lowercase;
+}
+
+button:focus,
+button:active,
+button:hover {
+    color: #e8c870;
+    background-color: rgba(74, 58, 31, 0.25);
+    border: 1px solid #a08240;
+    outline-style: none;
+    box-shadow:
+        inset 0 0 18px rgba(232, 200, 112, 0.15),
+        inset 0 0 2px rgba(232, 200, 112, 0.6);
+    background-size: 28%;
+}
+
+#lock {
+    background-image: image(url("/usr/share/wlogout/icons/lock.png"), url("icons/lock.png"));
+}
+
+#logout {
+    background-image: image(url("/usr/share/wlogout/icons/logout.png"), url("icons/logout.png"));
+}
+
+#suspend {
+    background-image: image(url("/usr/share/wlogout/icons/suspend.png"), url("icons/suspend.png"));
+}
+
+#hibernate {
+    background-image: image(url("/usr/share/wlogout/icons/hibernate.png"), url("icons/hibernate.png"));
+}
+
+#shutdown {
+    background-image: image(url("/usr/share/wlogout/icons/shutdown.png"), url("icons/shutdown.png"));
+}
+
+#reboot {
+    background-image: image(url("/usr/share/wlogout/icons/reboot.png"), url("icons/reboot.png"));
+}

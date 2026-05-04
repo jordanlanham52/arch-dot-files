@@ -77,21 +77,25 @@ PACMAN_PKGS=(
     xdg-desktop-portal-hyprland
     xorg-xwayland
     polkit-gnome
-    # Bar / launcher / notifications
-    waybar rofi-wayland swaync
+    # Bar / launcher / notifications / logout
+    waybar rofi-wayland swaync wlogout
     # Wallpaper (renamed from swww in Oct 2025)
     awww
     # Terminal + shell
     kitty foot zsh starship fastfetch
     # Tools
-    yazi neovim git stow
+    yazi neovim git stow tmux
     eza bat ripgrep fd duf dust
-    btop fzf
+    btop fzf lazygit
     # Audio
     pipewire pipewire-pulse wireplumber pavucontrol
     # Wayland utils
     wl-clipboard cliphist grim slurp
     brightnessctl playerctl
+    # Browser (themed via userChrome.css)
+    firefox
+    # Editor (themed via Sheol Dark extension + settings.json)
+    code
     # Fonts in repos
     ttf-jetbrains-mono-nerd
     ttf-firacode-nerd
@@ -249,7 +253,7 @@ else
         fi
     done
 
-    for pkg in hypr waybar rofi swaync starship kitty foot ghostty fastfetch zsh nvim; do
+    for pkg in hypr waybar rofi swaync starship kitty foot ghostty fastfetch zsh nvim wlogout vscode btop yazi bat tmux lazygit; do
         if [ ! -d "$pkg" ]; then
             info "$pkg (no source dir, skipping)"
             continue
@@ -354,6 +358,67 @@ if [ -f "$DOTS_DIR/scripts/roman_clock.py" ]; then
 fi
 echo
 
+# ---- Themed apps that don't follow stow conventions ------------------------
+step "installing app-specific themes"
+echo
+
+# --- VS Code: install the Sheol Dark theme extension ---
+if command -v code >/dev/null 2>&1; then
+    VSC_EXT_DIR="$HOME/.vscode/extensions/sheol.sheol-dark-1.0.0"
+    SHEOL_VSC_SRC="$DOTS_DIR/pkgs/vscode/.local/share/sheol-vscode-theme"
+    if [ -d "$SHEOL_VSC_SRC" ]; then
+        rm -rf "$VSC_EXT_DIR"
+        mkdir -p "$VSC_EXT_DIR"
+        cp -r "$SHEOL_VSC_SRC"/* "$VSC_EXT_DIR/"
+        ok "VS Code: Sheol Dark theme installed (~/.vscode/extensions/)"
+        info "  to activate: open VS Code → Cmd+K Cmd+T → Sheol Dark"
+    fi
+else
+    info "  code not installed — VS Code theme skipped"
+fi
+
+# --- bat: build cache so it sees the Sheol theme ---
+if command -v bat >/dev/null 2>&1 && [ -f "$HOME/.config/bat/themes/Sheol.tmTheme" ]; then
+    bat cache --build >/dev/null 2>&1 && \
+        ok "bat: theme cache rebuilt with Sheol" || \
+        info "  bat cache build had issues (non-fatal)"
+fi
+
+# --- Firefox userChrome: copy into default profile if exists ---
+FX_PROFILE_DIR=$(find "$HOME/.mozilla/firefox" -maxdepth 1 -type d -name "*.default-release" 2>/dev/null | head -1)
+[ -z "$FX_PROFILE_DIR" ] && FX_PROFILE_DIR=$(find "$HOME/.mozilla/firefox" -maxdepth 1 -type d -name "*.default*" 2>/dev/null | head -1)
+if [ -n "$FX_PROFILE_DIR" ]; then
+    SHEOL_FX_SRC="$DOTS_DIR/pkgs/firefox/.mozilla/firefox-sheol-theme/userChrome.css"
+    if [ -f "$SHEOL_FX_SRC" ]; then
+        mkdir -p "$FX_PROFILE_DIR/chrome"
+        cp "$SHEOL_FX_SRC" "$FX_PROFILE_DIR/chrome/userChrome.css"
+        ok "Firefox: userChrome.css installed to $(basename "$FX_PROFILE_DIR")/chrome/"
+        info "  REQUIRED: about:config → toolkit.legacyUserProfileCustomizations.stylesheets = true"
+    fi
+else
+    info "  no Firefox profile found — start Firefox once, then re-run install.sh"
+fi
+
+# --- Vencord (Discord) theme: copy into themes dir ---
+VENCORD_DIR="$HOME/.config/Vencord/themes"
+SHEOL_VC_SRC="$DOTS_DIR/pkgs/discord/.config/Vencord/themes/sheol.theme.css"
+if [ -f "$SHEOL_VC_SRC" ]; then
+    mkdir -p "$VENCORD_DIR"
+    cp "$SHEOL_VC_SRC" "$VENCORD_DIR/sheol.theme.css"
+    ok "Vencord: Sheol theme placed in ~/.config/Vencord/themes/"
+    info "  to activate: Vencord settings → Themes → enable 'sheol'"
+fi
+
+# --- Obsidian theme: leave instructions since vault location varies ---
+SHEOL_OBS_SRC="$DOTS_DIR/pkgs/obsidian/.config/obsidian-theme/Sheol"
+if [ -d "$SHEOL_OBS_SRC" ]; then
+    info "  Obsidian theme available — copy manually to your vault:"
+    info "    cp -r $SHEOL_OBS_SRC <vault>/.obsidian/themes/"
+    info "    then: Obsidian settings → Appearance → Theme: Sheol"
+fi
+
+echo
+
 # ---- TTY palette + console font --------------------------------------------
 step "installing TTY palette"
 sudo mkdir -p /etc/sheol
@@ -418,6 +483,14 @@ verify "waybar/top.jsonc" "$HOME/.config/waybar/top.jsonc"
 verify "waybar/style.css" "$HOME/.config/waybar/style.css"
 verify "kitty.conf"       "$HOME/.config/kitty/kitty.conf"
 verify "foot.ini"         "$HOME/.config/foot/foot.ini"
+verify "wlogout layout"   "$HOME/.config/wlogout/layout"
+verify "wlogout style"    "$HOME/.config/wlogout/style.css"
+verify "btop theme"       "$HOME/.config/btop/themes/sheol.theme"
+verify "yazi theme"       "$HOME/.config/yazi/theme.toml"
+verify "bat theme"        "$HOME/.config/bat/themes/Sheol.tmTheme"
+verify "tmux config"      "$HOME/.tmux.conf"
+verify "lazygit config"   "$HOME/.config/lazygit/config.yml"
+verify "VS Code settings" "$HOME/.config/Code/User/settings.json"
 verify "fastfetch config" "$HOME/.config/fastfetch/config.jsonc"
 
 # Verify .zshrc has the fastfetch greeting
