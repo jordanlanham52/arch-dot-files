@@ -1,6 +1,6 @@
 /* =============================================================================
    SHEOL // wlogout/style.css
-   Strict GTK3 CSS — no shorthand transitions, no problematic selectors.
+   Strict GTK3 CSS. Icon at top, label at bottom — no overlap.
    ============================================================================= */
 
 * {
@@ -17,15 +17,19 @@ button {
     color: #a08240;
     background-color: rgba(20, 17, 26, 0.85);
     background-repeat: no-repeat;
-    background-position: center;
-    background-size: 25%;
+    /* Anchor icon near the top-center of the button */
+    background-position: center 25%;
+    /* Fixed pixel size for the icon — won't scale with button */
+    background-size: 96px 96px;
     border-style: solid;
     border-width: 1px;
     border-color: #4a3a1f;
     border-radius: 0;
     margin: 14px;
-    font-size: 18px;
-    padding-bottom: 30px;
+    font-size: 16px;
+    /* Push the label to the bottom of the button — well below the icon */
+    padding-top: 200px;
+    padding-bottom: 24px;
 }
 
 button:focus,
@@ -35,29 +39,12 @@ button:hover {
     background-color: rgba(74, 58, 31, 0.30);
     border-color: #a08240;
     outline-style: none;
-    background-size: 27%;
+    background-size: 104px 104px;
 }
 
-#lock {
-    background-image: url("icons/lock.svg");
-}
-
-#logout {
-    background-image: url("icons/logout.svg");
-}
-
-#suspend {
-    background-image: url("icons/suspend.svg");
-}
-
-#hibernate {
-    background-image: url("icons/hibernate.svg");
-}
-
-#shutdown {
-    background-image: url("icons/shutdown.svg");
-}
-
-#reboot {
-    background-image: url("icons/reboot.svg");
-}
+#lock      { background-image: url("icons/lock.svg"); }
+#logout    { background-image: url("icons/logout.svg"); }
+#suspend   { background-image: url("icons/suspend.svg"); }
+#hibernate { background-image: url("icons/hibernate.svg"); }
+#shutdown  { background-image: url("icons/shutdown.svg"); }
+#reboot    { background-image: url("icons/reboot.svg"); }

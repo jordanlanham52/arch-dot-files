@@ -164,11 +164,15 @@ mkdir -p "$FONT_DIR/Cinzel" "$FONT_DIR/Cinzel-Decorative" "$FONT_DIR/Cormorant-G
 # Cinzel (variable font, all weights in one file)
 if ! fc-list 2>/dev/null | grep -q "Cinzel:"; then
     info "downloading Cinzel"
-    if curl -fsSL -o "$FONT_DIR/Cinzel/Cinzel.ttf" \
-        "https://github.com/google/fonts/raw/main/ofl/cinzel/Cinzel%5Bwght%5D.ttf" 2>/dev/null; then
+    curl -fsSL -o "$FONT_DIR/Cinzel/Cinzel.ttf" \
+        "https://github.com/google/fonts/raw/main/ofl/cinzel/Cinzel%5Bwght%5D.ttf" 2>/dev/null
+    # Defend against GitHub 404 HTML being saved as .ttf
+    size=$(stat -c '%s' "$FONT_DIR/Cinzel/Cinzel.ttf" 2>/dev/null || stat -f '%z' "$FONT_DIR/Cinzel/Cinzel.ttf" 2>/dev/null)
+    if [ -n "$size" ] && [ "$size" -gt 50000 ]; then
         ok "Cinzel"
     else
-        warn "Cinzel download failed"
+        rm -f "$FONT_DIR/Cinzel/Cinzel.ttf"
+        warn "Cinzel download failed (or got HTML error page)"
         FAILED_STEPS+=("font: Cinzel")
     fi
 else
@@ -180,9 +184,16 @@ if ! fc-list 2>/dev/null | grep -q "Cinzel Decorative"; then
     info "downloading Cinzel Decorative"
     failed=0
     for weight in Regular Bold Black; do
-        curl -fsSL -o "$FONT_DIR/Cinzel-Decorative/CinzelDecorative-${weight}.ttf" \
+        out="$FONT_DIR/Cinzel-Decorative/CinzelDecorative-${weight}.ttf"
+        curl -fsSL -o "$out" \
             "https://github.com/google/fonts/raw/main/ofl/cinzeldecorative/CinzelDecorative-${weight}.ttf" \
-            2>/dev/null || failed=1
+            2>/dev/null
+        # Defend against HTML 404 pages being saved as TTF
+        size=$(stat -c '%s' "$out" 2>/dev/null || stat -f '%z' "$out" 2>/dev/null)
+        if [ -z "$size" ] || [ "$size" -lt 30000 ]; then
+            rm -f "$out"
+            failed=1
+        fi
     done
     [ $failed -eq 0 ] && ok "Cinzel Decorative" || \
         { warn "Cinzel Decorative: some weights failed"; FAILED_STEPS+=("font: Cinzel Decorative"); }
@@ -190,20 +201,51 @@ else
     info "Cinzel Decorative (already installed)"
 fi
 
-# Cormorant Garamond — 5 weights × 2 styles
+# Cormorant Garamond — Google migrated this to variable fonts in 2024.
+# The old static/ path and CormorantGaramond-Regular.ttf no longer exist in
+# google/fonts. There are now two variable TTF files (one per axis: upright + italic),
+# each containing all 5 weights (Light/Regular/Medium/SemiBold/Bold).
 if ! fc-list 2>/dev/null | grep -q "Cormorant Garamond"; then
-    info "downloading Cormorant Garamond"
+    info "downloading Cormorant Garamond (variable fonts)"
     failed=0
-    for weight in Light Regular Medium SemiBold Bold; do
-        for style in "" "Italic"; do
-            fname="CormorantGaramond-${weight}${style}.ttf"
-            curl -fsSL -o "$FONT_DIR/Cormorant-Garamond/$fname" \
-                "https://github.com/google/fonts/raw/main/ofl/cormorantgaramond/$fname" \
-                2>/dev/null || failed=$((failed + 1))
-        done
+
+    # Upright (all weights in one file)
+    if curl -fsSL -o "$FONT_DIR/Cormorant-Garamond/CormorantGaramond[wght].ttf" \
+        "https://github.com/google/fonts/raw/main/ofl/cormorantgaramond/CormorantGaramond%5Bwght%5D.ttf" 2>/dev/null; then
+        :
+    else
+        failed=$((failed + 1))
+    fi
+
+    # Italic (all weights in one file)
+    if curl -fsSL -o "$FONT_DIR/Cormorant-Garamond/CormorantGaramond-Italic[wght].ttf" \
+        "https://github.com/google/fonts/raw/main/ofl/cormorantgaramond/CormorantGaramond-Italic%5Bwght%5D.ttf" 2>/dev/null; then
+        :
+    else
+        failed=$((failed + 1))
+    fi
+
+    # Sanity check that what we downloaded is actually TTF, not GitHub 404 HTML.
+    # If the file is < 100KB it's almost certainly an HTML error page.
+    for ttf in "$FONT_DIR/Cormorant-Garamond/"*.ttf; do
+        if [ -f "$ttf" ]; then
+            size=$(stat -c '%s' "$ttf" 2>/dev/null || stat -f '%z' "$ttf" 2>/dev/null)
+            if [ -n "$size" ] && [ "$size" -lt 100000 ]; then
+                rm -f "$ttf"
+                failed=$((failed + 1))
+            fi
+        fi
     done
-    [ $failed -lt 3 ] && ok "Cormorant Garamond" || \
-        { warn "Cormorant Garamond: many weights failed"; FAILED_STEPS+=("font: Cormorant Garamond"); }
+
+    if [ $failed -eq 0 ]; then
+        ok "Cormorant Garamond (variable, both styles)"
+    elif [ $failed -lt 2 ]; then
+        warn "Cormorant Garamond: italic style failed (upright works)"
+        FAILED_STEPS+=("font: Cormorant Garamond italic")
+    else
+        warn "Cormorant Garamond: download failed entirely"
+        FAILED_STEPS+=("font: Cormorant Garamond")
+    fi
 else
     info "Cormorant Garamond (already installed)"
 fi
