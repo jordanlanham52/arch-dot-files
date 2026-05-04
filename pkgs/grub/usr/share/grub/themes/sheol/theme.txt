@@ -1,97 +1,108 @@
 # =============================================================================
 #  SHEOL // GRUB theme
-#  Engraved menu for selecting which kernel/OS to enter.
+#  Engraved manuscript-page boot menu.
 # =============================================================================
 
-# Background image — dim spade watermark over abyss
-desktop-image: "background.png"
+# ---- Globals ---------------------------------------------------------------
+
+desktop-image: "grub-background.png"
 desktop-color: "#050507"
 
 title-text: ""
-title-font: "Cinzel Decorative Bold 24"
 title-color: "#c9a651"
-
 message-color: "#a08240"
 message-bg-color: "#050507"
-terminal-font: "JetBrainsMono Nerd Font Regular 12"
+terminal-font: "Unifont Regular 16"
 
-# ---- Header / brand --------------------------------------------------------
+# ---- Engraved frame (full-screen overlay) ---------------------------------
 
-+ label {
-    top = 8%
++ image {
+    file = "grub-frame.png"
     left = 0
+    top = 0
     width = 100%
-    align = "center"
-    text = "SHEOL"
-    font = "Cinzel Decorative Bold 32"
-    color = "#e8c870"
+    height = 100%
 }
 
-+ label {
-    top = 14%
-    left = 0
-    width = 100%
-    align = "center"
-    text = "—  select rite to enter  —"
-    font = "Cormorant Garamond Italic 14"
-    color = "#a08240"
+# ---- SHEOL header image ---------------------------------------------------
+
++ image {
+    file = "grub-sheol-header.png"
+    left = 50%-300
+    top = 60
+    width = 600
+    height = 100
 }
 
-# ---- Main boot menu --------------------------------------------------------
+# ---- Top divider ----------------------------------------------------------
+
++ image {
+    file = "grub-divider.png"
+    left = 50%-350
+    top = 175
+    width = 700
+    height = 35
+}
+
+# ---- Boot menu ------------------------------------------------------------
 
 + boot_menu {
-    left   = 25%
-    top    = 28%
-    width  = 50%
+    left   = 50%-380
+    top    = 240
+    width  = 760
     height = 50%
 
-    item_font   = "Cinzel Decorative Regular 14"
-    item_color  = "#b8aea0"
-    selected_item_font  = "Cinzel Decorative Bold 14"
-    selected_item_color = "#e8c870"
+    item_font            = "Unifont Regular 16"
+    item_color           = "#b8aea0"
+    selected_item_font   = "Unifont Regular 16"
+    selected_item_color  = "#e8c870"
 
-    icon_width  = 0
-    icon_height = 0
-    item_height = 32
+    icon_width  = 28
+    icon_height = 28
+    item_height = 48
     item_padding = 12
     item_spacing = 4
+    item_icon_space = 16
 
-    item_pixmap_style = "menu_*.png"
+    item_pixmap_style          = "menu_*.png"
     selected_item_pixmap_style = "menu_selected_*.png"
+
+    scrollbar = false
 }
 
-# ---- Footer / hints --------------------------------------------------------
+# ---- Bottom divider -------------------------------------------------------
+
++ image {
+    file = "grub-divider.png"
+    left = 50%-350
+    top = 100%-130
+    width = 700
+    height = 35
+}
+
+# ---- Countdown label ------------------------------------------------------
 
 + label {
-    top = 88%
-    left = 0
-    width = 100%
+    id    = "__timeout__"
+    text  = "AUTO-BOOT IN %d"
+    font  = "Unifont Regular 16"
+    color = "#c9a651"
     align = "center"
-    text = "↑↓  navigate    ⏎  enter    e  edit    c  console"
-    font = "JetBrainsMono Nerd Font Regular 11"
-    color = "#6b6470"
+    left  = 0
+    top   = 100%-90
+    width = 100%
+    height = 30
 }
+
+# ---- Footer hints ---------------------------------------------------------
 
 + label {
-    top = 92%
-    left = 0
-    width = 100%
-    align = "center"
-    text = "memento  ludere"
-    font = "Cormorant Garamond Italic 12"
-    color = "#a08240"
-}
-
-# ---- Boot countdown progress bar -------------------------------------------
-
-+ progress_bar {
-    id = "__timeout__"
-    left = 30%
-    top = 82%
-    width = 40%
-    height = 3
-    show_text = false
-    fg_color = "#a08240"
-    bg_color = "#1f1a26"
-    border_color = "#4a3a1f"
+    text   = "ENTER:  SELECT     E:  EDIT     C:  COMMAND  LINE"
+    font   = "Unifont Regular 16"
+    color  = "#6b6470"
+    align  = "center"
+    left   = 0
+    top    = 100%-50
+    width  = 100%
+    height = 24
 }
