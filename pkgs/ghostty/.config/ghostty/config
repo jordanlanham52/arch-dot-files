@@ -15,7 +15,6 @@ window-padding-x = 18
 window-padding-y = 14
 window-padding-balance = true
 background-opacity = 0.93
-background-blur-radius = 20
 
 # ---- Cursor ------------------------------------------------------------------
 cursor-style = bar

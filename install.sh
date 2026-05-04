@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================================
-#  SHEOL // install.sh  v3
-#  Build the rice. Calibrated for Arch Linux.
-#
-#  Resilient: individual package installs (one bad apple doesn't kill the run),
-#  fonts installed directly from Google Fonts (avoids AUR name churn),
-#  AUR packages opt-in (no interactive provider prompts).
+#  SHEOL // install.sh
+#  Builds the rice on Arch Linux. Resilient: per-package installs (one bad
+#  apple doesn't kill the run), fonts via Google Fonts (avoids AUR churn),
+#  AUR packages opt-in.
 # =============================================================================
 
-# NB: no `set -e` — we want to continue on individual failures and report.
 set -u
 
 GILT='\033[38;2;160;130;64m'
@@ -30,7 +27,6 @@ ok()      { echo -e "${GILT}  ✓${RESET} ${BONE}$1${RESET}"; }
 warn()    { echo -e "${SANCTUS}  ✘${RESET} ${BONE}$1${RESET}"; }
 info()    { echo -e "${LINEN}    $1${RESET}"; }
 
-# Track failures so we can report them at the end.
 FAILED_PKGS=()
 FAILED_AUR=()
 FAILED_STEPS=()
@@ -69,27 +65,24 @@ else
     fi
 fi
 
-if [ -n "$AUR" ]; then
-    step "AUR helper: $AUR"
-fi
+[ -n "$AUR" ] && step "AUR helper: $AUR"
 
-# ---- Pacman: install one at a time -----------------------------------------
-# Why individual? If even one package isn't in repos, a batch install aborts the
-# whole thing. Per-package, a missing one is logged and the rest continue.
-step "installing core packages (this may take a while)"
+# ---- Pacman packages: one at a time ----------------------------------------
+step "installing core packages"
 echo
 
 PACMAN_PKGS=(
     # Compositor + ecosystem
     hyprland hyprlock hypridle hyprpicker hyprpolkitagent
     xdg-desktop-portal-hyprland
+    xorg-xwayland
     polkit-gnome
     # Bar / launcher / notifications
     waybar rofi-wayland swaync
-    # Wallpaper
-    swww
+    # Wallpaper (renamed from swww in Oct 2025)
+    awww
     # Terminal + shell
-    ghostty zsh starship fastfetch
+    kitty zsh starship fastfetch
     # Tools
     yazi neovim git stow
     eza bat ripgrep fd duf dust
@@ -99,25 +92,23 @@ PACMAN_PKGS=(
     # Wayland utils
     wl-clipboard cliphist grim slurp
     brightnessctl playerctl
-    # Fonts available in repos
+    # Fonts in repos
     ttf-jetbrains-mono-nerd
     ttf-firacode-nerd
     terminus-font
     noto-fonts noto-fonts-emoji
-    # Theming dependencies
+    # Theming deps
     qt5ct qt6ct kvantum nwg-look
-    # Python (for the roman_clock script)
+    # Python (roman_clock script)
     python
-    # Optional but nice
+    # Convenience
     zsh-autosuggestions zsh-syntax-highlighting
     unzip curl
 )
 
-# Refresh pacman db once
 sudo pacman -Sy --noconfirm >/dev/null 2>&1 || true
 
 for pkg in "${PACMAN_PKGS[@]}"; do
-    # Skip if already installed
     if pacman -Qi "$pkg" >/dev/null 2>&1; then
         info "$pkg (already installed)"
         continue
@@ -129,12 +120,9 @@ for pkg in "${PACMAN_PKGS[@]}"; do
         FAILED_PKGS+=("$pkg")
     fi
 done
-
 echo
 
-# ---- AUR: optional packages, also one at a time ----------------------------
-# These are decorative or convenience packages that the rice can live without.
-# Picks the first provider non-interactively so paru doesn't stall.
+# ---- AUR packages: optional, non-fatal -------------------------------------
 if [ -n "$AUR" ]; then
     step "installing AUR packages (decorative — failures are non-fatal)"
     echo
@@ -153,59 +141,73 @@ if [ -n "$AUR" ]; then
         if $AUR -S --needed --skipreview --noconfirm "$pkg" >/dev/null 2>&1; then
             ok "$pkg"
         else
-            warn "$pkg failed (not in AUR right now, or build error)"
+            warn "$pkg failed"
             FAILED_AUR+=("$pkg")
         fi
     done
     echo
 fi
 
-# ---- Fonts: install directly from Google Fonts -----------------------------
-# Cinzel and Cormorant Garamond are required by the rice. AUR package names
-# for these change frequently (ttf-cinzel, otf-cinzel-ofl, etc.), so we just
-# fetch them directly. Installed per-user under ~/.local/share/fonts.
-step "installing display fonts from Google Fonts"
+# ---- Display fonts via Google Fonts GitHub mirror --------------------------
+# fonts.google.com/download has gotten flaky with non-browser User-Agents.
+# Pull from the official Google Fonts GitHub mirror instead.
+step "installing display fonts (Cinzel, Cinzel Decorative, Cormorant Garamond)"
 echo
 
 FONT_DIR="$HOME/.local/share/fonts/sheol"
-mkdir -p "$FONT_DIR"
+mkdir -p "$FONT_DIR/Cinzel" "$FONT_DIR/Cinzel-Decorative" "$FONT_DIR/Cormorant-Garamond"
 
-install_google_font() {
-    local family="$1"
-    local url_family="${family// /%20}"
-    local zipfile="/tmp/sheol-font-${family// /-}.zip"
-
-    if fc-list 2>/dev/null | grep -qi "$family"; then
-        info "$family (already installed)"
-        return 0
-    fi
-
-    info "downloading $family"
-    if curl -sL -o "$zipfile" "https://fonts.google.com/download?family=$url_family"; then
-        # Sanity check: must be a real zip, not an HTML error page
-        if file "$zipfile" 2>/dev/null | grep -q "Zip archive"; then
-            unzip -qo "$zipfile" -d "$FONT_DIR/${family// /-}"
-            ok "$family installed"
-        else
-            warn "$family download was not a valid zip (Google Fonts changed?)"
-            FAILED_STEPS+=("font: $family")
-        fi
-        rm -f "$zipfile"
+# Cinzel (variable font, all weights in one file)
+if ! fc-list 2>/dev/null | grep -q "Cinzel:"; then
+    info "downloading Cinzel"
+    if curl -fsSL -o "$FONT_DIR/Cinzel/Cinzel.ttf" \
+        "https://github.com/google/fonts/raw/main/ofl/cinzel/Cinzel%5Bwght%5D.ttf" 2>/dev/null; then
+        ok "Cinzel"
     else
-        warn "$family download failed (network?)"
-        FAILED_STEPS+=("font: $family")
+        warn "Cinzel download failed"
+        FAILED_STEPS+=("font: Cinzel")
     fi
-}
+else
+    info "Cinzel (already installed)"
+fi
 
-install_google_font "Cinzel"
-install_google_font "Cinzel Decorative"
-install_google_font "Cormorant Garamond"
+# Cinzel Decorative — three discrete weights
+if ! fc-list 2>/dev/null | grep -q "Cinzel Decorative"; then
+    info "downloading Cinzel Decorative"
+    failed=0
+    for weight in Regular Bold Black; do
+        curl -fsSL -o "$FONT_DIR/Cinzel-Decorative/CinzelDecorative-${weight}.ttf" \
+            "https://github.com/google/fonts/raw/main/ofl/cinzeldecorative/CinzelDecorative-${weight}.ttf" \
+            2>/dev/null || failed=1
+    done
+    [ $failed -eq 0 ] && ok "Cinzel Decorative" || \
+        { warn "Cinzel Decorative: some weights failed"; FAILED_STEPS+=("font: Cinzel Decorative"); }
+else
+    info "Cinzel Decorative (already installed)"
+fi
 
-# Refresh font cache so apps see the new fonts immediately
+# Cormorant Garamond — 5 weights × 2 styles
+if ! fc-list 2>/dev/null | grep -q "Cormorant Garamond"; then
+    info "downloading Cormorant Garamond"
+    failed=0
+    for weight in Light Regular Medium SemiBold Bold; do
+        for style in "" "Italic"; do
+            fname="CormorantGaramond-${weight}${style}.ttf"
+            curl -fsSL -o "$FONT_DIR/Cormorant-Garamond/$fname" \
+                "https://github.com/google/fonts/raw/main/ofl/cormorantgaramond/$fname" \
+                2>/dev/null || failed=$((failed + 1))
+        done
+    done
+    [ $failed -lt 3 ] && ok "Cormorant Garamond" || \
+        { warn "Cormorant Garamond: many weights failed"; FAILED_STEPS+=("font: Cormorant Garamond"); }
+else
+    info "Cormorant Garamond (already installed)"
+fi
+
 fc-cache -f >/dev/null 2>&1
 echo
 
-# ---- Stow the dotfiles ------------------------------------------------------
+# ---- Stow dotfiles ----------------------------------------------------------
 step "stowing dotfiles"
 echo
 
@@ -213,61 +215,115 @@ DOTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PKG_DIR="$DOTS_DIR/pkgs"
 
 if [ ! -d "$PKG_DIR" ]; then
-    warn "no pkgs/ directory found at $PKG_DIR"
-    warn "the repo may be incomplete — stop and check git status"
+    warn "no pkgs/ directory — repo incomplete"
     FAILED_STEPS+=("stow: pkgs/ missing")
 else
     cd "$PKG_DIR" || exit 1
-    for pkg in hypr waybar rofi swaync starship ghostty fastfetch zsh; do
+
+    # Pre-clean: useradd deploys skel files (.zshrc, .zprofile, .bashrc, etc)
+    # that block stow. Backup any non-symlink defaults so stow can deploy fresh.
+    SKEL_FILES=(
+        "$HOME/.zshrc" "$HOME/.zprofile" "$HOME/.zlogin" "$HOME/.zlogout"
+        "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.bash_logout"
+        "$HOME/.profile"
+    )
+    for f in "${SKEL_FILES[@]}"; do
+        if [ -f "$f" ] && [ ! -L "$f" ]; then
+            mv "$f" "$f.skel-backup-$(date +%s)"
+        fi
+    done
+
+    for pkg in hypr waybar rofi swaync starship kitty ghostty fastfetch zsh nvim; do
         if [ ! -d "$pkg" ]; then
-            warn "stow $pkg: directory missing in pkgs/"
-            FAILED_STEPS+=("stow: $pkg missing")
+            info "$pkg (no source dir, skipping)"
             continue
         fi
-        # -R for restow (handles pre-existing symlinks gracefully).
+
+        # Try restow first (idempotent)
         if stow -t "$HOME" -R "$pkg" 2>/dev/null; then
             ok "stow $pkg"
-        else
-            # Try regular stow (first-time, no -R)
-            if stow -t "$HOME" "$pkg" 2>/dev/null; then
-                ok "stow $pkg"
-            else
-                warn "stow $pkg failed (conflict with existing file?)"
-                info "  fix: rm any conflicting files in ~ and re-run, or stow --adopt manually"
-                FAILED_STEPS+=("stow: $pkg conflict")
+            continue
+        fi
+
+        # Conflict — try to identify what's in the way
+        STOW_ERR=$(stow -t "$HOME" -n "$pkg" 2>&1)
+        CONFLICT_FILES=$(echo "$STOW_ERR" | grep -oE '\* existing target is.+: \S+' | awk '{print $NF}')
+
+        # If there are conflicts, check if they're identical to repo files (safe to replace)
+        # or different (back them up before overwriting)
+        if [ -n "$CONFLICT_FILES" ]; then
+            for cf in $CONFLICT_FILES; do
+                target="$HOME/$cf"
+                source="$PKG_DIR/$pkg/$cf"
+                if [ -f "$target" ] && [ -f "$source" ]; then
+                    if ! cmp -s "$target" "$source"; then
+                        # Different — back up
+                        mv "$target" "$target.before-stow-$(date +%s)"
+                        info "  backed up $target (different from repo version)"
+                    else
+                        # Same content — just remove so stow can symlink
+                        rm "$target"
+                    fi
+                fi
+            done
+
+            # Retry stow now that conflicts are resolved
+            if stow -t "$HOME" -R "$pkg" 2>/dev/null; then
+                ok "stow $pkg (after backing up $(echo "$CONFLICT_FILES" | wc -w) conflict(s))"
+                continue
             fi
         fi
+
+        # Last resort: --adopt then restow (pulls existing files into the repo,
+        # then symlinks back). We don't actually want to modify the repo, so
+        # we copy the package files directly instead.
+        warn "stow $pkg conflict — falling back to direct copy"
+        find "$pkg" -type f -not -path '*/\.git/*' | while read -r srcfile; do
+            relpath="${srcfile#$pkg/}"
+            destfile="$HOME/$relpath"
+            mkdir -p "$(dirname "$destfile")"
+            cp "$srcfile" "$destfile"
+        done
+        ok "$pkg (copied directly)"
     done
 fi
 echo
 
 # ---- Wallpaper --------------------------------------------------------------
-step "installing wallpaper assets"
+step "installing wallpaper"
 WALLPAPER_TARGET="$HOME/.config/hypr/wallpaper.png"
+mkdir -p "$(dirname "$WALLPAPER_TARGET")"
+
 if [ -f "$DOTS_DIR/assets/wallpaper.png" ]; then
-    cp "$DOTS_DIR/assets/wallpaper.png" "$WALLPAPER_TARGET"
-    ok "wallpaper.png installed"
+    SRC_SIZE=$(stat -c%s "$DOTS_DIR/assets/wallpaper.png" 2>/dev/null || echo 0)
+    if cp "$DOTS_DIR/assets/wallpaper.png" "$WALLPAPER_TARGET"; then
+        DST_SIZE=$(stat -c%s "$WALLPAPER_TARGET" 2>/dev/null || echo 0)
+        if [ "$SRC_SIZE" -eq "$DST_SIZE" ] && [ "$DST_SIZE" -gt 1000 ]; then
+            ok "wallpaper.png installed (${DST_SIZE} bytes)"
+        else
+            warn "wallpaper copy size mismatch (src=$SRC_SIZE dst=$DST_SIZE)"
+            FAILED_STEPS+=("wallpaper: size mismatch")
+        fi
+    else
+        warn "wallpaper.png copy failed"
+        FAILED_STEPS+=("wallpaper: cp failed")
+    fi
 else
-    info "no wallpaper at assets/wallpaper.png — drop yours there and re-run, or:"
-    info "  cp /path/to/wallpaper.png ~/.config/hypr/wallpaper.png"
-    mkdir -p "$(dirname "$WALLPAPER_TARGET")"
+    info "no wallpaper at assets/wallpaper.png — generating fallback"
     if command -v convert >/dev/null 2>&1; then
         convert -size 1920x1080 xc:'#050507' "$WALLPAPER_TARGET" 2>/dev/null && \
-            ok "fallback solid-black wallpaper generated"
+            ok "fallback solid-black wallpaper"
     else
-        # 1x1 black PNG as last-resort placeholder so swww doesn't fail
+        # 1x1 black PNG as last-resort placeholder so awww doesn't fail
         echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" | \
             base64 -d > "$WALLPAPER_TARGET" 2>/dev/null && \
-            ok "1x1 fallback wallpaper generated (replace with your real one)"
+            ok "1x1 fallback wallpaper (replace with real one)"
     fi
 fi
 
-SPADE_TARGET="$HOME/.config/hypr/spade.png"
 if [ -f "$DOTS_DIR/assets/spade.png" ]; then
-    cp "$DOTS_DIR/assets/spade.png" "$SPADE_TARGET"
+    cp "$DOTS_DIR/assets/spade.png" "$HOME/.config/hypr/spade.png"
     ok "spade.png installed"
-else
-    info "no spade.png — hyprlock will skip the centerpiece image"
 fi
 echo
 
@@ -279,34 +335,26 @@ if [ -f "$DOTS_DIR/scripts/roman_clock.py" ]; then
     cp "$DOTS_DIR/scripts/roman_clock.py" "$SCRIPTS_TARGET/roman_clock.py"
     chmod +x "$SCRIPTS_TARGET/roman_clock.py"
     ok "roman_clock.py installed"
-else
-    warn "scripts/roman_clock.py not found"
-    FAILED_STEPS+=("scripts: roman_clock.py missing")
 fi
 echo
 
-# ---- TTY palette ------------------------------------------------------------
-step "installing TTY palette and console font"
+# ---- TTY palette + console font --------------------------------------------
+step "installing TTY palette"
 sudo mkdir -p /etc/sheol
-if [ -f "$DOTS_DIR/system/setvtrgb-palette.txt" ]; then
-    sudo cp "$DOTS_DIR/system/setvtrgb-palette.txt" /etc/sheol/
-    ok "TTY palette file installed at /etc/sheol/"
-fi
-if [ -f "$DOTS_DIR/system/vconsole.conf" ]; then
-    sudo cp "$DOTS_DIR/system/vconsole.conf" /etc/vconsole.conf
-    ok "vconsole.conf installed"
-fi
+[ -f "$DOTS_DIR/system/setvtrgb-palette.txt" ] && \
+    sudo cp "$DOTS_DIR/system/setvtrgb-palette.txt" /etc/sheol/ && ok "palette file"
+[ -f "$DOTS_DIR/system/vconsole.conf" ] && \
+    sudo cp "$DOTS_DIR/system/vconsole.conf" /etc/vconsole.conf && ok "vconsole.conf"
 if [ -f "$DOTS_DIR/system/sheol-tty-palette.service" ]; then
     sudo cp "$DOTS_DIR/system/sheol-tty-palette.service" /etc/systemd/system/
     sudo systemctl daemon-reload
-    ok "sheol-tty-palette.service installed"
+    ok "sheol-tty-palette.service"
 
     echo
     read -r -p "    enable sheol-tty-palette.service for boot? [Y/n] " enable_tty
     if [[ ! "$enable_tty" =~ ^[Nn]$ ]]; then
         sudo systemctl enable sheol-tty-palette.service >/dev/null 2>&1
-        sudo systemctl start sheol-tty-palette.service 2>/dev/null || \
-            info "  service start deferred to next boot"
+        sudo systemctl start sheol-tty-palette.service 2>/dev/null || true
         ok "service enabled"
     fi
 fi
@@ -316,7 +364,7 @@ echo
 if [[ "$SHELL" != *"zsh"* ]]; then
     read -r -p "    set zsh as default shell? [Y/n] " set_zsh
     if [[ ! "$set_zsh" =~ ^[Nn]$ ]]; then
-        chsh -s "$(which zsh)" && ok "default shell set to zsh"
+        chsh -s "$(which zsh)" && ok "default shell: zsh"
     fi
 else
     info "zsh already the default shell"
@@ -329,7 +377,37 @@ if [[ ! "$set_target" =~ ^[Nn]$ ]]; then
     sudo systemctl set-default multi-user.target >/dev/null 2>&1
     ok "default target = multi-user"
     info "Hyprland launches via .zprofile prompt on TTY1"
-    info "to revert: sudo systemctl set-default graphical.target"
+fi
+echo
+
+# ---- Verification — make sure critical files actually landed --------------
+step "verification"
+VERIFY_FAILED=0
+verify() {
+    local label="$1" path="$2"
+    if [ -f "$path" ] || [ -L "$path" ]; then
+        ok "$label"
+    else
+        warn "$label MISSING ($path)"
+        VERIFY_FAILED=1
+        FAILED_STEPS+=("missing: $path")
+    fi
+}
+verify ".zshrc"           "$HOME/.zshrc"
+verify ".zprofile"        "$HOME/.zprofile"
+verify "hyprland.conf"    "$HOME/.config/hypr/hyprland.conf"
+verify "hypr/colors.conf" "$HOME/.config/hypr/colors.conf"
+verify "wallpaper.png"    "$HOME/.config/hypr/wallpaper.png"
+verify "waybar/top.jsonc" "$HOME/.config/waybar/top.jsonc"
+verify "waybar/style.css" "$HOME/.config/waybar/style.css"
+verify "kitty.conf"       "$HOME/.config/kitty/kitty.conf"
+verify "fastfetch config" "$HOME/.config/fastfetch/config.jsonc"
+
+# Verify .zshrc has the fastfetch greeting
+if [ -f "$HOME/.zshrc" ] && ! grep -q "fastfetch" "$HOME/.zshrc"; then
+    warn ".zshrc missing fastfetch greeting (might be skel default)"
+    info "  fix: rm ~/.zshrc && cd $DOTS_DIR/pkgs && stow -t \$HOME zsh"
+    VERIFY_FAILED=1
 fi
 echo
 
@@ -337,30 +415,23 @@ echo
 echo -e "${GILT}  ◆${RESET}  ${BONE}installation complete${RESET}"
 echo
 
-if [ ${#FAILED_PKGS[@]} -gt 0 ]; then
-    warn "pacman packages that failed (${#FAILED_PKGS[@]}):"
-    for p in "${FAILED_PKGS[@]}"; do
-        info "  - $p"
-    done
+[ ${#FAILED_PKGS[@]} -gt 0 ] && {
+    warn "pacman failures (${#FAILED_PKGS[@]}):"
+    printf '    - %s\n' "${FAILED_PKGS[@]}"
     echo
-fi
+}
 
-if [ ${#FAILED_AUR[@]} -gt 0 ]; then
-    warn "AUR packages that failed (${#FAILED_AUR[@]}):"
-    for p in "${FAILED_AUR[@]}"; do
-        info "  - $p"
-    done
-    info "these are decorative — the rice will work without them"
+[ ${#FAILED_AUR[@]} -gt 0 ] && {
+    warn "AUR failures (${#FAILED_AUR[@]}) — decorative, non-fatal:"
+    printf '    - %s\n' "${FAILED_AUR[@]}"
     echo
-fi
+}
 
-if [ ${#FAILED_STEPS[@]} -gt 0 ]; then
-    warn "other steps that had issues (${#FAILED_STEPS[@]}):"
-    for s in "${FAILED_STEPS[@]}"; do
-        info "  - $s"
-    done
+[ ${#FAILED_STEPS[@]} -gt 0 ] && {
+    warn "other issues (${#FAILED_STEPS[@]}):"
+    printf '    - %s\n' "${FAILED_STEPS[@]}"
     echo
-fi
+}
 
 if [ ${#FAILED_PKGS[@]} -eq 0 ] && [ ${#FAILED_AUR[@]} -eq 0 ] && [ ${#FAILED_STEPS[@]} -eq 0 ]; then
     echo -e "${HALO}  ♠${RESET}  ${BONE}no failures — clean install${RESET}"
@@ -370,8 +441,7 @@ fi
 echo -e "${BONE}  next steps:${RESET}"
 echo -e "${LINEN}  · log out / reboot${RESET}"
 echo -e "${LINEN}  · drop your wallpaper at ~/.config/hypr/wallpaper.png${RESET}"
-echo -e "${LINEN}  · drop your spade.png at ~/.config/hypr/spade.png (optional)${RESET}"
-echo -e "${LINEN}  · log into TTY1, follow the prompt to launch Hyprland${RESET}"
+echo -e "${LINEN}  · log into TTY1 and follow the prompt to enter Hyprland${RESET}"
 echo
 echo -e "${HALO}  ♠${RESET}  ${BONE}memento ludere${RESET}"
 echo

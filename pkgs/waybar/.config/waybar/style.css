@@ -1,9 +1,8 @@
 /* =============================================================================
    SHEOL // waybar/style.css
-   Two-register iconostasis styling, calibrated to the mockup.
+   Slim 32px single bar with translucency, hairline separators, pulsing active.
    ============================================================================= */
 
-/* Color tokens */
 @define-color abyss      #050507;
 @define-color crypt      #0c0a10;
 @define-color sepulcher  #14111a;
@@ -22,7 +21,7 @@
 
 * {
     font-family: "Cinzel Decorative", "Cormorant Garamond", "JetBrainsMono Nerd Font", serif;
-    font-size: 13px;
+    font-size: 12px;
     border-radius: 0;
     border: none;
     margin: 0;
@@ -30,155 +29,106 @@
     min-height: 0;
 }
 
-/* ============================ TOP REGISTER ================================ */
-window#waybar.top {
-    background: linear-gradient(180deg, #0c0a10 0%, #050507 100%);
-    border-top: 1px solid @gilt;
-    border-bottom: 1px solid @tarnish;
+window#waybar {
+    background: rgba(5, 5, 7, 0.78);
     color: @bone;
+    border: 1px solid @gilt;
 }
 
-/* ========================== BOTTOM REGISTER =============================== */
-window#waybar.bottom {
-    background: linear-gradient(180deg, #050507 0%, #0c0a10 100%);
-    border-top: 0;
-    border-bottom: 1px solid @gilt;
-    color: @linen;
-    font-size: 12px;
-}
-
-/* ----- Spade launcher ----------------------------------------------------- */
+/* ---- Spade launcher ----------------------------------------------------- */
 #custom-spade {
     color: @gilt;
-    font-size: 18px;
-    padding: 0 16px;
-    border-right: 1px solid @ash;
+    font-size: 15px;
+    padding: 0 14px 0 16px;
+    border-right: 1px solid @tarnish;
     transition: color 200ms ease;
 }
+#custom-spade:hover { color: @halo; }
 
-#custom-spade:hover {
-    color: @halo;
-}
-
-/* ----- Workspaces (Roman numerals) ---------------------------------------- */
+/* ---- Workspaces (Roman) ------------------------------------------------- */
 #workspaces {
-    padding: 0 4px;
+    padding: 2px 6px;
+    border-right: 1px solid @tarnish;
 }
-
 #workspaces button {
     color: @linen;
     font-family: "Cinzel Decorative", serif;
-    font-size: 14px;
-    padding: 0 14px;
-    border: none;
+    font-size: 12px;
+    padding: 1px 9px;
+    margin: 0 2px;
+    border: 1px solid transparent;
     background: transparent;
     transition: all 250ms ease;
 }
-
 #workspaces button:hover {
     color: @bone;
-    background: rgba(160, 130, 64, 0.08);
-    box-shadow: none;
-    text-shadow: none;
+    background: rgba(160, 130, 64, 0.06);
 }
-
 #workspaces button.active {
     color: @halo;
-    background: radial-gradient(ellipse at center bottom,
-                rgba(160, 130, 64, 0.25) 0%,
-                rgba(160, 130, 64, 0.05) 50%,
-                transparent 80%);
-    text-shadow: 0 0 8px rgba(232, 200, 112, 0.4);
+    background: rgba(232, 200, 112, 0.05);
+    border: 1px solid @oxide;
+    animation: halo-pulse 4s ease-in-out infinite;
 }
-
 #workspaces button.urgent {
     color: @sanctus;
     background: rgba(90, 26, 26, 0.15);
+    border: 1px solid @sanctus;
+}
+@keyframes halo-pulse {
+    0%   { box-shadow: inset 0 0 6px rgba(232, 200, 112, 0.10), inset 0 0 1px rgba(232, 200, 112, 0.35); }
+    50%  { box-shadow: inset 0 0 12px rgba(232, 200, 112, 0.20), inset 0 0 1px rgba(232, 200, 112, 0.55); }
+    100% { box-shadow: inset 0 0 6px rgba(232, 200, 112, 0.10), inset 0 0 1px rgba(232, 200, 112, 0.35); }
 }
 
-/* ----- Window title ------------------------------------------------------- */
+/* ---- Window title ------------------------------------------------------- */
 #window {
     color: @bone;
     font-family: "Cormorant Garamond", serif;
     font-style: italic;
-    font-size: 14px;
-    padding: 0 24px;
+    font-size: 12px;
+    padding: 0 16px;
 }
 
-/* ----- Clock (Roman, ◆-flanked) ------------------------------------------- */
-#custom-clock {
-    color: @relic;
-    font-family: "Cinzel Decorative", serif;
-    font-size: 14px;
-    padding: 0 20px;
-    border-left: 1px solid @ash;
-    letter-spacing: 0.05em;
-}
-
-/* ============================ STATUS MODULES ============================== */
-/* Used in the bottom register. Vertical hairlines between them. */
-#network,
-#cpu,
-#memory,
-#battery,
-#tray,
-#custom-power {
-    color: @bone;
-    padding: 0 14px;
-    border-right: 1px solid @ash;
-    border-left: 1px solid @ash;
-    margin: 0 -1px;
+/* ---- Stats modules ------------------------------------------------------ */
+#network, #cpu, #memory {
+    color: @linen;
+    padding: 0 12px;
+    border-right: 1px solid @tarnish;
     font-family: "JetBrainsMono Nerd Font", monospace;
     font-size: 11px;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.5px;
 }
+#network:hover, #cpu:hover, #memory:hover { color: @bone; }
+#cpu.warning, #memory.warning { color: @leaf; }
+#cpu.critical, #memory.critical { color: @sanctus; }
 
-#network:hover,
-#cpu:hover,
-#memory:hover,
-#battery:hover {
-    background: rgba(160, 130, 64, 0.06);
-}
-
-/* Critical states — sanctus, no animation, just stillness */
-#battery.warning {
+/* ---- Roman clock -------------------------------------------------------- */
+#custom-roman-clock {
     color: @leaf;
-}
-#battery.critical {
-    color: @sanctus;
-}
-#network.disconnected {
-    color: @sanctus;
-}
-
-/* ----- Tray --------------------------------------------------------------- */
-#tray {
-    padding: 0 8px;
+    font-family: "Cinzel Decorative", serif;
+    font-size: 12px;
+    padding: 0 14px;
+    border-right: 1px solid @tarnish;
+    letter-spacing: 1px;
 }
 
-/* ----- Power button ------------------------------------------------------- */
+/* ---- Power -------------------------------------------------------------- */
 #custom-power {
-    color: @gilt;
-    font-size: 13px;
-    padding: 0 16px;
+    color: @oxide;
+    padding: 0 14px;
+    font-size: 14px;
     transition: color 200ms ease;
 }
+#custom-power:hover { color: @sanctus; }
 
-#custom-power:hover {
-    color: @sanctus;
-    background: rgba(90, 26, 26, 0.10);
-}
-
-/* ----- Tooltips ----------------------------------------------------------- */
 tooltip {
-    background: @abyss;
-    border: 1px solid @gilt;
-    border-radius: 0;
-    color: @bone;
-    font-family: "Cormorant Garamond", serif;
+    background: @crypt;
+    border: 1px solid @oxide;
+    padding: 4px 8px;
 }
-
 tooltip label {
     color: @bone;
-    padding: 6px 10px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 12px;
 }

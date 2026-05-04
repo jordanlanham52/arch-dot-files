@@ -1,6 +1,7 @@
 # =============================================================================
 #  SHEOL // .zprofile
 #  Dual-mode boot: TTY by default, optional Hyprland launch on TTY1.
+#  Launcher logs failures to /tmp/hyprland.log; never loops back to login.
 # =============================================================================
 
 # ---- Environment -------------------------------------------------------------
@@ -8,7 +9,7 @@ export EDITOR=nvim
 export VISUAL=nvim
 export PAGER=less
 export BROWSER=firefox
-export TERMINAL=ghostty
+export TERMINAL=kitty
 
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
@@ -34,12 +35,11 @@ export XDG_CURRENT_DESKTOP=Hyprland
 export XDG_SESSION_DESKTOP=Hyprland
 export XDG_SESSION_TYPE=wayland
 
-# ---- Auto-launch Hyprland on TTY1 only --------------------------------------
-# Press any key to launch within 5s, otherwise stay in TTY.
-# Other TTYs (2-6) always remain raw shell.
+# ---- Hyprland launcher on TTY1 ----------------------------------------------
+# Press Y within 5s to launch, otherwise stay in TTY.
+# On Hyprland exit (success OR failure), drop to shell — never re-loop.
 
 if [[ -z "$WAYLAND_DISPLAY" && "$XDG_VTNR" == "1" && -z "$SSH_TTY" ]]; then
-    # Print a small Deco prompt
     print -P ""
     print -P "  %F{yellow}♠%f  %F{white}sheol://login%f"
     print -P "  %F{8}─────────────────%f"
@@ -51,8 +51,29 @@ if [[ -z "$WAYLAND_DISPLAY" && "$XDG_VTNR" == "1" && -z "$SSH_TTY" ]]; then
         if [[ "$reply" == "n" || "$reply" == "N" ]]; then
             print -P "  %F{8}staying in tty%f"
         else
-            print -P "  %F{yellow}entering...%f"
-            exec uwsm start hyprland-uwsm.desktop 2>/dev/null || exec Hyprland
+            print -P "  %F{yellow}starting Hyprland...%f"
+            echo
+
+            # Try uwsm first (proper systemd integration), then bare Hyprland.
+            # Capture output so we can see what failed.
+            if command -v uwsm >/dev/null 2>&1; then
+                uwsm start hyprland-uwsm.desktop > /tmp/hyprland.log 2>&1
+            else
+                Hyprland > /tmp/hyprland.log 2>&1
+            fi
+
+            EXIT=$?
+            echo
+            print -P "  %F{8}Hyprland exited (code $EXIT)%f"
+            print -P "  %F{8}log: /tmp/hyprland.log%f"
+            print -P "  %F{8}─────────────────%f"
+            echo
+
+            if [ $EXIT -ne 0 ] && [ -f /tmp/hyprland.log ]; then
+                print -P "  %F{red}last lines of log:%f"
+                tail -10 /tmp/hyprland.log
+                echo
+            fi
         fi
     else
         echo

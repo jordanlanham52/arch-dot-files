@@ -67,11 +67,11 @@ ask() {
     local default="${2:-}"
     local reply
     if [ -n "$default" ]; then
-        echo -ne "${HALO}  ?${RESET} ${BONE}$prompt${RESET} ${LINEN}[$default]${RESET}: "
+        echo -ne "${HALO}  ?${RESET} ${BONE}$prompt${RESET} ${LINEN}[$default]${RESET}: " >&2
     else
-        echo -ne "${HALO}  ?${RESET} ${BONE}$prompt${RESET}: "
+        echo -ne "${HALO}  ?${RESET} ${BONE}$prompt${RESET}: " >&2
     fi
-    read -r reply
+    read -r reply </dev/tty
     echo "${reply:-$default}"
 }
 
@@ -82,7 +82,7 @@ ask_yn() {
     local hint
     if [ "$default" = "Y" ]; then hint="[Y/n]"; else hint="[y/N]"; fi
     echo -ne "${HALO}  ?${RESET} ${BONE}$prompt${RESET} ${LINEN}$hint${RESET}: "
-    read -r reply
+    read -r reply </dev/tty
     reply="${reply:-$default}"
     [[ "$reply" =~ ^[Yy] ]]
 }
@@ -200,7 +200,7 @@ phase_disk() {
 
     local confirm
     echo -ne "${SANCTUS}  type 'WIPE' to proceed: ${RESET}"
-    read -r confirm
+    read -r confirm </dev/tty
     [ "$confirm" = "WIPE" ] || die "didn't get confirmation, aborting"
 
     # Wipe + partition
@@ -409,15 +409,23 @@ systemctl set-default multi-user.target >/dev/null 2>&1
 # Stash sheol-dots auto-install for first user login
 if [ "$INSTALL_RICE" = "true" ]; then
     USER_HOME="/home/$USERNAME"
-    cat > "$USER_HOME/.sheol-firstrun.sh" <<EOF
+    # Write firstrun script: substitute $USERNAME and $SHEOL_REPO at write-time,
+    # then quote-protect the rest so configure.sh's `set -u` doesn't blow up
+    # on lines like `$1` or runtime vars.
+    cat > "$USER_HOME/.sheol-firstrun.sh" <<FIRSTRUN_EOF
 #!/usr/bin/env bash
 # Auto-runs once on first login as $USERNAME, then deletes itself.
 # Installs the rice end-to-end.
+SHEOL_REPO="$SHEOL_REPO"
+FIRSTRUN_EOF
+
+    # Append the rest with a QUOTED delimiter so nothing expands at all
+    cat >> "$USER_HOME/.sheol-firstrun.sh" <<'FIRSTRUN_BODY'
 
 cd ~
 
 echo
-echo "  ♠  installing rice on first login"
+echo "  spade  installing rice on first login"
 echo
 
 # AUR helper
@@ -427,32 +435,35 @@ if ! command -v paru >/dev/null 2>&1; then
     (cd /tmp/paru && makepkg -si --noconfirm)
 fi
 
-# Clone the rice repo
-if [ -n "$SHEOL_REPO" ] && [ ! -d ~/sheol-dots ]; then
-    git clone "$SHEOL_REPO" ~/sheol-dots
+# Clone the rice repo (URL was set via env above)
+if [ -n "$SHEOL_REPO" ] && [ ! -d ~/arch-dot-files ]; then
+    git clone "$SHEOL_REPO" ~/arch-dot-files
 fi
 
 # Run install.sh if present
-if [ -d ~/sheol-dots ] && [ -f ~/sheol-dots/install.sh ]; then
-    cd ~/sheol-dots
+if [ -d ~/arch-dot-files ] && [ -f ~/arch-dot-files/install.sh ]; then
+    cd ~/arch-dot-files
     bash install.sh
 fi
 
 # Self-destruct
 rm -f ~/.sheol-firstrun.sh
 sed -i '/sheol-firstrun/d' ~/.zprofile 2>/dev/null
-EOF
+FIRSTRUN_BODY
+
     chmod +x "$USER_HOME/.sheol-firstrun.sh"
     chown "$USERNAME:$USERNAME" "$USER_HOME/.sheol-firstrun.sh"
 
-    # Hook into .zprofile so it runs on first login (one-shot, self-deletes)
-    cat >> "$USER_HOME/.zprofile" <<EOF
+    # Hook into .zprofile so it runs on first login.
+    # QUOTED delimiter — nothing in the body expands.
+    # DIFFERENT delimiter name from any other heredoc nearby.
+    cat >> "$USER_HOME/.zprofile" <<'ZPROFILE_HOOK_EOF'
 
 # Sheol first-run hook (auto-deletes after running)
 if [ -f ~/.sheol-firstrun.sh ]; then
     bash ~/.sheol-firstrun.sh
 fi
-EOF
+ZPROFILE_HOOK_EOF
     chown "$USERNAME:$USERNAME" "$USER_HOME/.zprofile"
 fi
 

@@ -17,7 +17,7 @@ A complete dotfiles repo, calibrated to a specific visual brief: **engraved gold
 The rice has these properties:
 
 - **Hyprland** compositor with gradient gold borders, censer-paced animations, sharp 90° corners (zero rounding anywhere).
-- **Two-register Waybar** — workspaces in Roman numerals, Roman-numeral clock with ◆ flanks, status modules right-aligned in a second row.
+- **Slim single Waybar** — workspaces in Roman numerals, Roman clock with ◆ flanks, status modules and power button — all in one 32px bar with hairline separators.
 - **Hyprlock altarpiece** with Latin liturgical date, Roman-numeral time, double Deco frame, IORDANUS LANHAM nameplate.
 - **Rofi** styled as an opened missal.
 - **Notifications** as small reliquaries — double-frame card, sharp corners, sanctus border for critical alerts.
@@ -28,26 +28,69 @@ The rice has these properties:
 
 ---
 
-## Quick install
+## Quick start
 
-On a fresh Arch system:
+Two paths depending on where you're starting from.
+
+### Path A — bare metal / blank disk (Arch live ISO)
+
+For new installs. Goes from blank disk to fully riced Hyprland in one pass.
+
+**Requirements:** UEFI firmware, internet (wired or `iwctl` for WiFi), ≥20GB target disk.
 
 ```bash
-git clone <your-fork-url> ~/sheol-dots
-cd ~/sheol-dots
+# Boot the Arch live ISO. At root@archiso prompt:
+curl -sL https://raw.githubusercontent.com/jordanlanham52/arch-dot-files/main/arch-installer.sh -o /tmp/i.sh
+bash /tmp/i.sh
+```
+
+The installer will:
+
+1. **Pre-flight** — verify connectivity, sync time, refresh keyring/mirrors
+2. **Disk** — let you pick a target, prompt for explicit `WIPE` confirmation, partition + format, optional LUKS encryption (recommended on real hardware)
+3. **Base** — pacstrap the Arch base system
+4. **Configure** — locale, timezone, hostname, user account, sudo
+5. **Bootloader** — systemd-boot
+6. **Network** — NetworkManager + dual-mode boot (multi-user.target by default; Hyprland on demand from TTY1)
+7. **Hand-off** — at the reboot prompt, optionally enter your fork URL of this repo to auto-clone and run `install.sh` on first login
+
+After reboot, log into TTY1 as your user — the rice install runs automatically (~15 min). Follow the prompts.
+
+### Path B — existing Arch system
+
+If you already have Arch installed and just want the rice on top:
+
+```bash
+git clone https://github.com/jordanlanham52/arch-dot-files ~/arch-dot-files
+cd ~/arch-dot-files
 bash install.sh
 ```
 
-Drop your wallpaper at `~/.config/hypr/wallpaper.png` (and optionally `~/.config/hypr/spade.png`), reboot, log into TTY1, follow the prompt.
+`install.sh` is idempotent — safe to re-run after edits or on partial failures. It tracks per-package failures and reports them at the end without aborting the rest of the install.
+
+### After either path
+
+Drop your wallpaper at `~/.config/hypr/wallpaper.png` (and optionally `~/.config/hypr/spade.png`). The installer copies whatever is in `assets/wallpaper.png` automatically; if missing, it generates a placeholder so first boot doesn't fail.
+
+Reboot, log into TTY1, follow the `[Y/n] enter Hyprland (5s → tty)` prompt.
+
+### Safety notes
+
+- `arch-installer.sh` asks before wiping. **Twice.** It shows the disk layout and requires you to type `WIPE` literally to proceed. Read what it tells you.
+- LUKS encryption is **opt-in** — recommend YES on real hardware, NO on throwaway VMs.
+- `install.sh` does not touch system files except for `/etc/locale.gen`, `/etc/locale.conf`, `/etc/vconsole.conf`, and the optional `sheol-tty-palette.service`. It will prompt before each.
+- AUR packages are installed via `paru` (auto-installed if missing). Failures there are non-fatal — they're decorative (cursor theme, screenshot tool, logout menu).
 
 ---
 
 ## Repo structure
 
 ```
-sheol-dots/
-├── install.sh                    # full install for Arch
+arch-dot-files/
+├── arch-installer.sh             # bare-metal: blank disk → riced system
+├── install.sh                    # rice install for existing Arch
 ├── README.md                     # this file
+├── CHANGELOG.md
 ├── assets/
 │   ├── README.md                 # where to drop wallpaper.png + spade.png
 │   ├── wallpaper.png             # (you provide)
@@ -60,7 +103,6 @@ sheol-dots/
 │   │   └── hypridle.conf
 │   ├── waybar/.config/waybar/
 │   │   ├── top.jsonc             # top register
-│   │   ├── bottom.jsonc          # bottom register
 │   │   └── style.css
 │   ├── rofi/.config/rofi/
 │   │   ├── config.rasi
@@ -71,9 +113,10 @@ sheol-dots/
 │   ├── starship/.config/
 │   │   ├── starship.toml         # GUI prompt
 │   │   └── starship-tty.toml     # TTY fallback
+│   ├── kitty/.config/kitty/kitty.conf  # primary terminal
 │   ├── ghostty/.config/
-│   │   ├── ghostty/config        # primary terminal
-│   │   └── kitty/kitty.conf      # alternative terminal
+│   │   ├── ghostty/config        # alternate terminal (real hardware)
+
 │   ├── fastfetch/.config/fastfetch/
 │   │   ├── config.jsonc
 │   │   └── spade.txt             # ASCII bookplate
@@ -102,8 +145,8 @@ sheol-dots/
 # Pacman
 sudo pacman -S --needed hyprland hyprlock hypridle hyprpicker hyprpolkitagent \
     xdg-desktop-portal-hyprland \
-    waybar rofi-wayland swaync swww \
-    ghostty zsh starship fastfetch \
+    waybar rofi-wayland swaync awww \
+    kitty zsh starship fastfetch \
     yazi neovim git stow eza bat ripgrep fd duf dust btop fzf \
     pipewire pipewire-pulse wireplumber pavucontrol \
     wl-clipboard cliphist grim slurp brightnessctl playerctl \
@@ -118,8 +161,8 @@ paru -S hyprshot ttf-cinzel ttf-cormorant bibata-cursor-theme
 ### 2. Stow
 
 ```bash
-cd ~/sheol-dots/pkgs
-for pkg in hypr waybar rofi swaync starship ghostty fastfetch zsh nvim; do
+cd ~/arch-dot-files/pkgs
+for pkg in hypr waybar rofi swaync starship kitty ghostty fastfetch zsh nvim; do
     stow -t "$HOME" "$pkg"
 done
 ```
@@ -165,7 +208,8 @@ Every config sources one of three files derived from the same logical palette:
 - `pkgs/waybar/.config/waybar/style.css` — `@define-color` block at top
 - `pkgs/rofi/.config/rofi/missal.rasi` — top of file
 - `pkgs/swaync/.config/swaync/style.css` — top of file
-- `pkgs/ghostty/.config/ghostty/config` — palette block at bottom
+- `pkgs/kitty/.config/kitty/kitty.conf` — palette at bottom (primary terminal)
+- `pkgs/ghostty/.config/ghostty/config` — palette block at bottom (alternate)
 - `pkgs/starship/.config/starship.toml` — inline hex values
 
 If you want to swap the palette, change all six. The token names (gilt, tarnish, halo, bone, etc.) are kept identical across files so a global find/replace works.
@@ -209,15 +253,15 @@ Apps not handled by this repo but worth theming to match:
 
 Each of these takes 30–60 minutes to theme properly. They're not in this repo because they're highly personal and the upstream projects change frequently.
 
-### Replacing Ghostty with Kitty
+### Switching to Ghostty (alternate terminal)
 
-If Ghostty doesn't suit you, kitty is pre-configured:
+Kitty is the default. To switch to Ghostty (works on real hardware; crashes in QEMU virtio-gpu):
 
 ```bash
 # In hyprland.conf, change:
-$terminal = kitty
+$terminal = ghostty
 
-# In waybar bottom.jsonc, change ghostty references to kitty
+# Single bar config — already kitty by default in top.jsonc
 ```
 
 ---
@@ -227,7 +271,7 @@ $terminal = kitty
 The dotfiles repo is designed for both Hyprland and pure-TTY use. On servers, Proxmox nodes, or any machine where you don't want Hyprland, only stow these packages:
 
 ```bash
-cd ~/sheol-dots/pkgs
+cd ~/arch-dot-files/pkgs
 stow -t "$HOME" zsh starship fastfetch
 ```
 
@@ -237,7 +281,7 @@ Plus the system-level TTY palette setup. You'll get the same shell, prompt, fast
 
 ## Common issues
 
-**Hyprland won't start.** Check `~/.local/share/hyprland/hyprland.log`. Most often this is a wallpaper issue — the path `~/.config/hypr/wallpaper.png` must exist or `swww img` will fail. Drop a placeholder if you don't have the wallpaper yet.
+**Hyprland won't start.** Check `~/.local/share/hyprland/hyprland.log`. Most often this is a wallpaper issue — the path `~/.config/hypr/wallpaper.png` must exist or `awww img` will fail. Drop a placeholder if you don't have the wallpaper yet.
 
 **Roman numerals don't render.** Make sure Python 3 is installed and `~/.config/hypr/scripts/roman_clock.py` is executable. Test from terminal: `~/.config/hypr/scripts/roman_clock.py --time`.
 
