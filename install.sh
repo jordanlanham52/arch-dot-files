@@ -211,6 +211,22 @@ echo
 step "stowing dotfiles"
 echo
 
+# Belt-and-suspenders: ensure /etc/zsh/zshenv and /etc/zsh/zshrc exist.
+# Some Arch zsh installs are missing these — when kitty's shell integration
+# tries to source them it fails, killing zsh and closing kitty immediately.
+# We disable kitty shell integration in kitty.conf, but having empty rc files
+# also fixes broken auto-completion and other latent zsh issues.
+if [ ! -f /etc/zsh/zshenv ]; then
+    sudo mkdir -p /etc/zsh
+    sudo touch /etc/zsh/zshenv
+    info "  created empty /etc/zsh/zshenv (was missing — known kitty crash cause)"
+fi
+if [ ! -f /etc/zsh/zshrc ]; then
+    sudo touch /etc/zsh/zshrc
+    info "  created empty /etc/zsh/zshrc"
+fi
+echo
+
 DOTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PKG_DIR="$DOTS_DIR/pkgs"
 
