@@ -1,7 +1,7 @@
 configuration {
     modi: "drun,run,window";
     show-icons: false;
-    terminal: "ghostty";
+    terminal: "kitty";
     drun-display-format: "{name}";
     location: 0;
     disable-history: false;
